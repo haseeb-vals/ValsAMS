@@ -1,0 +1,1138 @@
+       Application Management System(AMS)
+            TABLE INFO
+                  dbo.TBL0051(Table Master)
+                  dbo.TBL0052(Table Details)
+            
+            UTILITY & VARIABLE
+                  dbo.TBL0053(GLOBAL VARIABLE)
+                  dbo.TAL0054(UTILITY Master)
+                  dbo.TAL0055(UTILITY Details)
+            
+            BRANDING
+                  dbo.TAL0056(BRANDING SETTINGS)
+            
+            DEVICE MANAGEMENT (DMS)
+                  dbo.TBL0061(DEVICE TYPE)
+                  dbo.TBL0062(DEVICE CATEGORY)
+                  dbo.TBL0063(DEVICE VENDOR)
+                  dbo.TBL0064(DEVICE PROTOCOLS)
+                  dbo.TBL0065(DEVICE FIRMWARE)
+                  dbo.TBL0066(DEVICE IOS TYPE)
+                  dbo.TBL0067(DEVICE IOS MASTER)
+                  dbo.TBL0068(DEVICE IOS DETAIL)
+                  dbo.TBL0069(DEVICE MASTER)
+                  dbo.TBL0070(DEVICE PROTOCOLS DETAIL)
+                  dbo.TBL0071(DEVICE IOS DETAIL)
+            
+            APPLICATION USER & ROLE
+                  dbo.TBL0030(APPLICATION_ROLES)
+                  dbo.TBL0031(APPLICATION_MENU)
+                  
+                  dbo.TBL0032(DISTRIBUTOR_MASTER)
+                  dbo.TBL0033(DISTRIBUTOR_CHANNEL)
+                  dbo.TBL0034(DISTRIBUTOR_PAYMENT_TERM)
+                  
+                  
+      Application Management System(B2B)
+            GEO
+                  dbo.TBL0041(COUNTRY)
+                  dbo.TBL0042(STATE)
+                  dbo.TBL0043(CITY)
+                  dbo.TBL0044(DISTRICT)
+            SIM
+                  dbo.TBL0072(TELECOM)
+                  dbo.TBL0073(SIM_PACKAGE)
+                  dbo.TBL0074(SIM_MASTER)
+                  
+            HARNESS
+                  dbo.TBL0075(HARNESS_ITEM)
+                  dbo.TBL0076(HARNESS_MASTER)
+                  dbo.TBL0077(HARNESS_DETAILS)
+                  
+            DEVICE
+                  dbo.TBL0080(DEVICE ITEM MASTER)
+                  dbo.TBL0081(DEVICE SIM DETAILS)
+                  dbo.TBL0082(DEVICE_ITEM_STATUS)
+            
+            APPLICATION USER & ROLE
+                  dbo.TBL0035(SUB_DISTRIBUTOR)
+                  dbo.TBL0036(GROUP MASTER)
+                  dbo.TBL0037(GROUP DETAILS)
+                  dbo.TBL0038(ORANIZATION)
+                  
+            
+      Application Management System(B2C)
+            GEO
+                  dbo.TBL0045(LOCATION)
+                  dbo.TBL0046(POI)
+            
+            APPLICATION USER & ROLE
+                  dbo.TBL00039(COMPANY)
+                  dbo.TBL00040(BRANCH)
+                  dbo.TBL00021(Application User Role)
+                  dbo.TBL00022(APPLICATION user ROLE RIGTHS)
+                  dbo.TBL00023(APPLICATION USER)
+                  dbo.TBL00024(USER ROLE Assigned)
+                  dbo.TBL00025(USER PASSWORD CHANGE LOGS)
+                  dbo.TBL00026(USER HARDWARE CHANGE LOGS)
+                  dbo.TBL00027(USER LOGIN LOGS)
+
+
+--APPLICATION USER ROLE
+
+      CREATE TABLE APP.AMS0021
+      (
+            NUM001 INT IDENTITY(1,1)PRIMARY KEY,                        ---ROLE_ID
+            NUM002 INT REFERENCES dbo.TBL0040(NUM001),            --BRANCH_ID           #AUTO SAVE FROM BACK END
+            NUM003 INT REFERENCES dbo.TBL0039(NUM001),            --COMPANY_ID          #AUTO SAVE FROM BACK END
+            NUM004 INT REFERENCES dbo.TBL0038(NUM001),            --ORANIZATION_ID    #AUTO Save from Back end
+            NUM005 INT REFERENCES dbo.TBL0035(NUM001),                  --SUB_DISTRIBUTORS_ID #AUTO SAVE FROM BACK END
+            NUM006 INT REFERENCES dbo.TBL0032(NUM001),                  --DISTRIBUTORS_ID     #AUTO SAVE FROM BACK END
+            VAR001 VARCHAR(50) NOT NULL,                                ---ROLE_NAME
+            VAR002 VARCHAR(100),                                              ---ROLE_REMARKS
+            VAR003 VARCHAR(1) DEFAULT 'Y',                                    ---ROLE_STATUS --Y:Active,N:IN-Active,D:Delete
+            VAR004 VARCHAR(50) REFERENCES dbo.TBL00023(VAR001),   ---CREAET BY
+            VAR005 VARCHAR(50) REFERENCES dbo.TBL00023(VAR001),   ---UPDATE BY
+            DAT001 DATETIME,                                                  ---CREATE DATE
+            DAT002 DATETIME,                                                  ---UPDATE DATE
+      )
+      
+----NOTE: this form showing data in gridview and form inuput as per login session
+            IF    is_distributor='Y'
+            THEN
+                  auto save distributor at backend and gridview show all data
+            IF is_subDistributor='Y'
+            THEN
+                  auto save distributor, sub. DISTRIBUTOR  and other take input by user also show in gridview
+            IF is_org_admin='Y'
+            THEN
+            
+            IF  is_comp_Admin='Y'
+            THEN
+                  
+            IF is_branch_admin='Y'
+            THEN
+            
+            ELSE CHECK IF ONLY ONE BRANCH THAN AUTO FILL
+            SAME AS ALL 
+
+ ----Application Management System(AMS)
+------APPLICATION USER & ROLE
+--------APPLICATION_ROLE
+            CREATE TABLE dbo.TBL0030
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,                        ---APP_ROLE_ID
+                  VAR001 VARCHAR(1)  NOT NULL,                                ---APP_ROLE_CODE
+                  VAR002 VARCHAR(50) NOT NULL,                                ---APP_ROLE_NAME
+                  VAR003 VARCHAR(1) DEFAULT 'Y',                              ---APP_ROLE_STATUS --Y:Active,N:IN-Active,D:Delete          
+                  VAR004 VARCHAR(50) ,    ---CREAET BY
+                  VAR005 VARCHAR(50) ,    ---UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),                          ---CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE(),                          ---UPDATE DATE
+            );
+      INSERT INTO dbo.TBL0030 (VAR001,VAR002,VAR003)VALUES('O','Owners','Y')
+      INSERT INTO dbo.TBL0030 (VAR001,VAR002,VAR003)VALUES('D','Distributors','Y')
+      INSERT INTO dbo.TBL0030 (VAR001,VAR002,VAR003)VALUES('S','Sub. Distributors','Y')
+      INSERT INTO dbo.TBL0030 (VAR001,VAR002,VAR003)VALUES('G','GROUPS','Y')
+      INSERT INTO dbo.TBL0030 (VAR001,VAR002,VAR003)VALUES('O','Organization','Y')
+      INSERT INTO dbo.TBL0030 (VAR001,VAR002,VAR003)VALUES('C','Company','Y')
+      INSERT INTO dbo.TBL0030 (VAR001,VAR002,VAR003)VALUES('B','Branch','Y')
+      INSERT INTO dbo.TBL0030 (VAR001,VAR002,VAR003)VALUES('U','User','Y')
+
+--------APPLICATION_MENU
+            CREATE TABLE dbo.TBL0031
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,                        ---MENU_ID
+                  NUM002 INT NULL REFERENCES dbo.TBL0031(NUM001), ---PARENT_MENU_ID
+                  NUM003 INT NULL REFERENCES dbo.TBL0030(NUM001), ---APP_ROLE_ID
+                  NUM004 INT ,                                                            ---MENU_SORT_ORDER
+                  VAR001 VARCHAR(1),                                                      ---MENU_TYPE H:HEADER, D:DETAIL
+                  VAR002 VARCHAR(50) NOT NULL,                                ---MENU_NAME
+                  VAR003 VARCHAR(100),                                              ---MENU_URL
+                  VAR004 VARCHAR(100),                                              ---MENU_ICON
+                  VAR005 VARCHAR(1) DEFAULT 'Y',                              ---MENU_STATUS --Y:Active,N:IN-Active,D:Delete
+                  VAR006 VARCHAR(1) DEFAULT 'N',                              ---INCLUDE_IN_PACKAGE --Y:Yes,N:NO
+                  VAR007 VARCHAR(50) ,                                                    ---CREAET BY
+                  VAR008 VARCHAR(50) ,                                                    ---UPDATE BY
+                  DAT001 DATETIME,                                                  ---CREATE DATE
+                  DAT002 DATETIME,                                                  ---UPDATE DATE
+            );
+
+ ----Application Management System(AMS)
+------GEO
+--------COUNTRY
+            CREATE TABLE dbo.TBL0041
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY, ---COUNTRY_ID
+                  NUM002 INT,                                      ---COUNTRY_ISO_CODE       LIKE 586
+                  VAR001 VARCHAR(3) NOT NULL,          ---COUNTRY_SHORT_CODE     LIKE PAK
+                  VAR002 VARCHAR(4) NOT NULL,          ---COUNTRY_CALLING_CODE   LIKE 0092
+                  VAR003 VARCHAR(100) NOT NULL,              ---COUNTRY_NAME           LIKE PAKISTAN
+                  VAR004 VARCHAR(100) NOT NULL,              ---COUNTRY_CONTENTE       LIKE ASIA
+                  VAR005 VARCHAR(10) NOT NULL,         ---COUNTRY_REGION         LIKE CENTER, NORTH, SOUTH, EAST
+                  VAR006 VARCHAR(2) ,                              ---COUNTRY_CURRENCY2  LIKE RS
+                  VAR007 VARCHAR(3) ,                              ---COUNTRY_CURRENCY3  LIKE USD,PKR
+                  VAR008 VARCHAR(1) DEFAULT 'Y',             ---COUNTRY_STATUS  --Y:Active,N:IN-Active,D:Delete
+                  VAR009 VARCHAR(50) ,---CREAET BY
+                  VAR010 VARCHAR(50) ,---UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),   ---CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE()    ---UPDATE DATE
+            )
+--------STATE
+            CREATE TABLE dbo.TBL0042
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,            ---STATE_ID
+                  NUM002 INT REFERENCES dbo.TBL0041(NUM001),      ---COUNTRY_ID
+                  VAR001 VARCHAR(3) NOT NULL,                     ---STATE_SHORT_CODE LIKE SIN
+                  VAR002 VARCHAR(3) NOT NULL,                     ---STATE_CODE LIKE 003
+                  VAR003 VARCHAR(100) NOT NULL,                         ---STATE_NAME LIKE 'SINDH'
+                  VAR004 VARCHAR(10) NOT NULL,                    ---STATE_REGION LIKE CENTER, NORTH, SOUTH, EAST....
+                  VAR005 VARCHAR(1) DEFAULT 'Y',                        ---STATE_STATUS  --Y:Active,N:IN-Active,D:Delete
+                  VAR006 VARCHAR(50) ,                                        ---CREAET BY
+                  VAR007 VARCHAR(50) ,                                        ---UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),              ---CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE(),              ---UPDATE DATE
+            )
+--------CITY
+            CREATE TABLE dbo.TBL0043
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,            ---CITY_ID
+                  NUM002 INT REFERENCES dbo.TBL0042(NUM001),      ---STATE_ID RELATIONSHIP
+                  VAR001 VARCHAR(3) NOT NULL,                     ---CITY_SHORT_CODE LIKE KHI
+                  VAR002 VARCHAR(3) NOT NULL,                     ---CITY_CODE LIKE 005
+                  VAR003 VARCHAR(100) NOT NULL,                         ---CITY_NAME LIKE 'KARACHI'
+                  VAR004 VARCHAR(10) NOT NULL,                    ---CITY_REGION LIKE CENTER, NORTH, SOUTH, EAST....
+                  VAR005 VARCHAR(1) DEFAULT 'Y',                        ---CITY_STATUS  --Y:Active,N:IN-Active,D:Delete
+                  VAR006 VARCHAR(50) ,                                        ---CREAET BY
+                  VAR007 VARCHAR(50) ,                                        ---UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),              ---CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE(),              ---UPDATE DATE
+            )
+--------DISTRICT
+            CREATE TABLE dbo.TBL0044
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,            ---DISTRICT_ID
+                  NUM002 INT REFERENCES dbo.TBL0043(NUM001),      ---CITY_ID RELATIONSHIP
+                  VAR001 VARCHAR(3) NOT NULL,                     ---DISTRICT_SHORT_CODE LIKE MLR
+                  VAR002 VARCHAR(3) NOT NULL,                     ---DISTRICT_CODE LIKE 001
+                  VAR003 VARCHAR(100) NOT NULL,                         ---DISTRICT_NAME LIKE 'Malir'
+                  VAR004 VARCHAR(10) NOT NULL,                    ---DISTRICT_REGION LIKE CENTER, NORTH, SOUTH, EAST....
+                  VAR005 VARCHAR(1) DEFAULT 'Y',                        ---DISTRICT_STATUS  --Y:Active,N:IN-Active,D:Delete
+                  VAR006 VARCHAR(50),                                         ---CREAET BY
+                  VAR007 VARCHAR(50),                                         ---UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),              ---CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE()               ---UPDATE DATE
+            )
+--------LOCATION
+            CREATE TABLE dbo.TBL0045
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,            ---LOCATION_ID
+                  NUM002 INT REFERENCES dbo.TBL0044(NUM001),      ---DISTRICT_ID
+                  DEC001 DECIMAL(10,6),                                 ---Latitude
+                  DEC002 DECIMAL(10,6),                                 ---Longitude
+                  DEC003 DECIMAL(10,6),                                 ---Altitude
+                  VAR001 VARCHAR(4) NOT NULL,                     ---LOCATION_SHORT_CODE LIKE AGTC
+                  VAR002 VARCHAR(4) NOT NULL,                     ---LOCATION_CODE LIKE 0240
+                  VAR003 VARCHAR(100) NOT NULL,                         ---LOCATION_NAME LIKE 'Malir'
+                  VAR004 VARCHAR(10) NOT NULL,                    ---LOCATION_REGION LIKE CENTER, NORTH, SOUTH, EAST....
+                  VAR005 VARCHAR(1) DEFAULT 'Y',                        ---LOCATION_STATUS
+                  VAR006 VARCHAR(50) ,                                        ---CREAET BY
+                  VAR007 VARCHAR(50) ,                                        ---UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),              ---CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE(),              ---UPDATE DATE
+            )
+--------POI
+            CREATE TABLE dbo.TBL0046
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,            ---POI_ID
+                  NUM002 INT REFERENCES dbo.TBL0045(NUM001),      ---LOCATION_ID RELATIONSHIP
+                  NUM003 INT REFERENCES dbo.TBL0032(NUM001),            --DISTRIBUTORS_ID     #AUTO SAVE FROM BACK END
+                  NUM004 INT REFERENCES dbo.TBL0035(NUM001),            --SUB_DISTRIBUTORS_ID #AUTO SAVE FROM BACK END
+                  NUM005 INT REFERENCES dbo.TBL0038(NUM001),      --ORANIZATION_ID    #AUTO Save from Back end
+                  NUM006 INT REFERENCES dbo.TBL0039(NUM001),      --COMPANY_ID          #AUTO SAVE FROM BACK END
+                  NUM007 INT REFERENCES dbo.TBL0040(NUM001),      --BRANCH_ID           #AUTO SAVE FROM BACK END
+                  VAR001 VARCHAR(100) NOT NULL,                         ---POI_TYPE LIKE 'G' FOR GLOBAL, S FOR SELF
+                  VAR002 VARCHAR(100) NOT NULL,                         ---POI_NAME LIKE 'MY HOME'
+                  VAR005 VARCHAR(1) DEFAULT 'Y',                        ---POI_STATUS --Y:Active,N:IN-Active,D:Delete
+                  VAR006 VARCHAR(50) ,                                        ---CREAET BY
+                  VAR007 VARCHAR(50) ,                                        ---UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),              ---CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE(),              ---UPDATE DATE
+            )
+
+ --Application Management System(AMS)
+----DISTRIBUTORS
+------DISTRIBUTOR_MASTER
+            CREATE TABLE dbo.TBL0032
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,                  --DISTRIBUTORS_ID
+                  NUM002 INT REFERENCES dbo.TBL0056(NUM001),                  --BrandingID
+                  NUM003 INT REFERENCES dbo.TBL0045(NUM001),                  --LOCATION_ID
+                  NUM004 INT DEFAULT 1,                                             --MAX_SUB_DISTRIBUTION_ALLOWED
+                  NUM005 INT DEFAULT 10,                                            --MAX_TESTING_DEVICE_ALLOWED
+                  NUM006 NUMERIC(10),                                                     --MAX_DEVICE_ALLOWED
+                  VAR001 VARCHAR(100) NOT NULL,                                     --DistributorName
+                  VAR002 VARCHAR(100),                                              --ContactPerson
+                  VAR003 VARCHAR(100),                                              --URL
+                  VAR004 VARCHAR(100),                                              --Email
+                  VAR005 VARCHAR(20),                                               --Phone
+                  VAR006 VARCHAR(20),                                               --CELL,
+                  VAR007 VARCHAR(20),                                               --SLA_NO,
+                  VAR008 VARCHAR(1) DEFAULT 'Y',                                    --Distributor status --Y:Active,N:IN-Active,D:Delete              
+                  VAR009 VARCHAR(50) , --ADMIN_USER_ID,---MAPPED WITH LOGIN USER                
+                  VAR010 VARCHAR(1) DEFAULT 'M',                                    --BILLING_FLAG (M:MONTHLY,Q:3 MONTH,S:6 MONTH,12 MONTH
+                  NUM007 INT DEFAULT 10,                                            --DUE_DAYS,
+                  NUM008 DECIMAL(10,2) DEFAULT 5,                                   --OVER_DUE_PERCENTAGE
+                  VAR011 VARCHAR(50),                                               --UDF01
+                  VAR012 VARCHAR(50),                                               --UDF02
+                  VAR013 VARCHAR(50),                                               --UDF03
+                  VAR014 VARCHAR(50),                                               --UDF04
+                  VAR015 VARCHAR(50),                                               --UDF05
+                  DAT001 DATETIME DEFAULT GETDATE(),                          --RegistrationDate
+                  DAT002 DATETIME DEFAULT GETDATE()+365,    --ExpiryDate
+                  VAR016 VARCHAR(50),                                                     --CREAET BY
+                  VAR017 VARCHAR(50),                                                     --UPDATE BY
+                  DAT003 DATETIME DEFAULT GETDATE(),                          --CREATE DATE
+                  DAT004 DATETIME DEFAULT GETDATE(),                          --UPDATE DATE
+            );
+------DISTRIBUTOR_CHANNEL
+            CREATE TABLE dbo.TBL0033
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,            ---DISTRIBUTOR_CHANNEL_ID
+                  NUM002 INT REFERENCES dbo.TBL0032(NUM001),      ---DISTRIBUTORS_ID
+                  NUM003 INT REFERENCES dbo.TBL0063(NUM001),      ---DEVICE_VENDOR_ID
+                  VAR001 VARCHAR(100),                                  ---REMAKRS,
+                  DAT001 DATETIME,                                      ---ASSIGN DATE
+                  VAR002 VARCHAR(1) DEFAULT 'Y',                        ---ASSIGN STATUS,  --Y:Active,N:IN-Active,D:Delete    
+                  VAR003 VARCHAR(50),                                         ---CREAET BY
+                  VAR004 VARCHAR(50),                                         ---UPDATE BY
+                  DAT002 DATETIME DEFAULT GETDATE(),              ---CREATE DATE
+                  DAT003 DATETIME DEFAULT GETDATE(),              ---UPDATE DATE
+            )
+------DISTRIBUTOR_PAYMENT_TERM
+            CREATE TABLE dbo.TBL0034
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,            ---DISTRIBUTOR_PT_ID
+                  NUM002 INT REFERENCES dbo.TBL0032(NUM001),      ---DISTRIBUTORS_ID
+                  NUM003 INT DEFAULT 0,                                 ---MIN_DEVICE
+                  NUM004 INT DEFAULT 10,                                ---MAX_DEVICE
+                  NUM005 DECIMAL(10,2),                                 ---PRICE
+                  NUM006 DECIMAL(10,2),                                 ---DISCOUNT
+                  VAR001 VARCHAR(255),                                  ---PT_REMARKS
+                  VAR002 VARCHAR(1) DEFAULT 'Y',                        ---PT STATUS,  --Y:Active,N:IN-Active,D:Delete  
+                  VAR003 VARCHAR(50),                                         ---CREAET BY
+                  VAR004 VARCHAR(50),                                         ---UPDATE BY
+                  DAT002 DATETIME DEFAULT GETDATE(),              ---CREATE DATE
+                  DAT003 DATETIME DEFAULT GETDATE(),              ---UPDATE DATE
+            )
+            
+
+------SUB_DISTRIBUTOR
+      NOTE: SHOWING ONLY Distributor OWN SUB Distributor AND ALLOWED INSERT ONLY MAX_SUB_DISTRIBUTION_ALLOWED
+      CREATE TABLE dbo.TBL0035
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,                  --SUB_DISTRIBUTORS_ID
+                  NUM002 INT REFERENCES dbo.TBL0032(NUM001),                  ---DISTRIBUTORS_ID
+                  NUM003 INT REFERENCES dbo.TBL0045(NUM001),                  --LOCATION_ID
+                  NUM004 INT DEFAULT 10,                                            --MAX_TESTING_DEVICE_ALLOWED ---OUT OF ALLOWED ON Distributor
+                  NUM005 NUMERIC(10),                                                     --MAX_DEVICE_ALLOWED ---OUT OF ALLOWED ON Distributor
+                  VAR001 VARCHAR(100) NOT NULL,                                     --SUB_Distributor_Name
+                  VAR002 VARCHAR(100),                                              --SUB_Distributor_ContactPerson
+                  VAR003 VARCHAR(100),                                              --SUB_Distributor_URL
+                  VAR004 VARCHAR(100),                                              --SUB_Distributor_Email
+                  VAR005 VARCHAR(20),                                               --SUB_Distributor_Phone
+                  VAR006 VARCHAR(20),                                               --SUB_Distributor_CELL,             
+                  VAR007 VARCHAR(1) DEFAULT 'Y',                                    --SUB_Distributor_status --Y:Active,N:IN-Active,D:Delete
+                  VAR008 VARCHAR(50) REFERENCES dbo.TBL00023(VAR001),   --ADMIN_USER_ID,---MAPPED WITH LOGIN USER
+                  VAR009 VARCHAR(50),                                               --SUB_Distributor_UDF01
+                  VAR010 VARCHAR(50),                                               --SUB_Distributor_UDF02
+                  VAR011 VARCHAR(50),                                               --SUB_Distributor_UDF03
+                  VAR012 VARCHAR(50),                                               --SUB_Distributor_UDF04
+                  VAR013 VARCHAR(50),                                               --SUB_Distributor_UDF05
+                  VAR014 VARCHAR(50) REFERENCES dbo.TBL00023(VAR001),   --CREAET BY
+                  VAR015 VARCHAR(50) REFERENCES dbo.TBL00023(VAR001),   --UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),                          --CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE(),                          --UPDATE DATE
+            )
+
+ --Application Management System(AMS)
+----DISTRIBUTORS
+------DISTRIBUTOR_MASTER
+            CREATE TABLE dbo.TBL0032
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,                  --DISTRIBUTORS_ID
+                  NUM002 INT REFERENCES dbo.TBL0056(NUM001),                  --BrandingID
+                  NUM003 INT REFERENCES dbo.TBL0045(NUM001),                  --LOCATION_ID
+                  NUM004 INT DEFAULT 1,                                             --MAX_SUB_DISTRIBUTION_ALLOWED
+                  NUM005 INT DEFAULT 10,                                            --MAX_TESTING_DEVICE_ALLOWED
+                  NUM006 NUMERIC(10),                                                     --MAX_DEVICE_ALLOWED
+                  VAR001 VARCHAR(100) NOT NULL,                                     --DistributorName
+                  VAR002 VARCHAR(100),                                              --ContactPerson
+                  VAR003 VARCHAR(100),                                              --URL
+                  VAR004 VARCHAR(100),                                              --Email
+                  VAR005 VARCHAR(20),                                               --Phone
+                  VAR006 VARCHAR(20),                                               --CELL,
+                  VAR007 VARCHAR(20),                                               --SLA_NO,
+                  VAR008 VARCHAR(1) DEFAULT 'Y',                                    --Distributor status --Y:Active,N:IN-Active,D:Delete              
+                  VAR009 VARCHAR(50) , --ADMIN_USER_ID,---MAPPED WITH LOGIN USER                
+                  VAR010 VARCHAR(1) DEFAULT 'M',                                    --BILLING_FLAG (M:MONTHLY,Q:3 MONTH,S:6 MONTH,12 MONTH
+                  NUM007 INT DEFAULT 10,                                            --DUE_DAYS,
+                  NUM008 DECIMAL(10,2) DEFAULT 5,                                   --OVER_DUE_PERCENTAGE
+                  VAR011 VARCHAR(50),                                               --UDF01
+                  VAR012 VARCHAR(50),                                               --UDF02
+                  VAR013 VARCHAR(50),                                               --UDF03
+                  VAR014 VARCHAR(50),                                               --UDF04
+                  VAR015 VARCHAR(50),                                               --UDF05
+                  DAT001 DATETIME DEFAULT GETDATE(),                          --RegistrationDate
+                  DAT002 DATETIME DEFAULT GETDATE()+365,    --ExpiryDate
+                  VAR016 VARCHAR(50),                                                     --CREAET BY
+                  VAR017 VARCHAR(50),                                                     --UPDATE BY
+                  DAT003 DATETIME DEFAULT GETDATE(),                          --CREATE DATE
+                  DAT004 DATETIME DEFAULT GETDATE(),                          --UPDATE DATE
+            );
+------DISTRIBUTOR_CHANNEL
+            CREATE TABLE dbo.TBL0033
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,            ---DISTRIBUTOR_CHANNEL_ID
+                  NUM002 INT REFERENCES dbo.TBL0032(NUM001),      ---DISTRIBUTORS_ID
+                  NUM003 INT REFERENCES dbo.TBL0063(NUM001),      ---DEVICE_VENDOR_ID
+                  VAR001 VARCHAR(100),                                  ---REMAKRS,
+                  DAT001 DATETIME,                                      ---ASSIGN DATE
+                  VAR002 VARCHAR(1) DEFAULT 'Y',                        ---ASSIGN STATUS,  --Y:Active,N:IN-Active,D:Delete    
+                  VAR003 VARCHAR(50),                                         ---CREAET BY
+                  VAR004 VARCHAR(50),                                         ---UPDATE BY
+                  DAT002 DATETIME DEFAULT GETDATE(),              ---CREATE DATE
+                  DAT003 DATETIME DEFAULT GETDATE(),              ---UPDATE DATE
+            )
+------DISTRIBUTOR_PAYMENT_TERM
+            CREATE TABLE dbo.TBL0034
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,            ---DISTRIBUTOR_PT_ID
+                  NUM002 INT REFERENCES dbo.TBL0032(NUM001),      ---DISTRIBUTORS_ID
+                  NUM003 INT DEFAULT 0,                                 ---MIN_DEVICE
+                  NUM004 INT DEFAULT 10,                                ---MAX_DEVICE
+                  NUM005 DECIMAL(10,2),                                 ---PRICE
+                  NUM006 DECIMAL(10,2),                                 ---DISCOUNT
+                  VAR001 VARCHAR(255),                                  ---PT_REMARKS
+                  VAR002 VARCHAR(1) DEFAULT 'Y',                        ---PT STATUS,  --Y:Active,N:IN-Active,D:Delete  
+                  VAR003 VARCHAR(50),                                         ---CREAET BY
+                  VAR004 VARCHAR(50),                                         ---UPDATE BY
+                  DAT002 DATETIME DEFAULT GETDATE(),              ---CREATE DATE
+                  DAT003 DATETIME DEFAULT GETDATE(),              ---UPDATE DATE
+            )
+            
+
+------SUB_DISTRIBUTOR
+      NOTE: SHOWING ONLY Distributor OWN SUB Distributor AND ALLOWED INSERT ONLY MAX_SUB_DISTRIBUTION_ALLOWED
+      CREATE TABLE dbo.TBL0035
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,                  --SUB_DISTRIBUTORS_ID
+                  NUM002 INT REFERENCES dbo.TBL0032(NUM001),                  ---DISTRIBUTORS_ID
+                  NUM003 INT REFERENCES dbo.TBL0045(NUM001),                  --LOCATION_ID
+                  NUM004 INT DEFAULT 10,                                            --MAX_TESTING_DEVICE_ALLOWED ---OUT OF ALLOWED ON Distributor
+                  NUM005 NUMERIC(10),                                                     --MAX_DEVICE_ALLOWED ---OUT OF ALLOWED ON Distributor
+                  VAR001 VARCHAR(100) NOT NULL,                                     --SUB_Distributor_Name
+                  VAR002 VARCHAR(100),                                              --SUB_Distributor_ContactPerson
+                  VAR003 VARCHAR(100),                                              --SUB_Distributor_URL
+                  VAR004 VARCHAR(100),                                              --SUB_Distributor_Email
+                  VAR005 VARCHAR(20),                                               --SUB_Distributor_Phone
+                  VAR006 VARCHAR(20),                                               --SUB_Distributor_CELL,             
+                  VAR007 VARCHAR(1) DEFAULT 'Y',                                    --SUB_Distributor_status --Y:Active,N:IN-Active,D:Delete
+                  VAR008 VARCHAR(50) REFERENCES dbo.TBL00023(VAR001),   --ADMIN_USER_ID,---MAPPED WITH LOGIN USER
+                  VAR009 VARCHAR(50),                                               --SUB_Distributor_UDF01
+                  VAR010 VARCHAR(50),                                               --SUB_Distributor_UDF02
+                  VAR011 VARCHAR(50),                                               --SUB_Distributor_UDF03
+                  VAR012 VARCHAR(50),                                               --SUB_Distributor_UDF04
+                  VAR013 VARCHAR(50),                                               --SUB_Distributor_UDF05
+                  VAR014 VARCHAR(50) REFERENCES dbo.TBL00023(VAR001),   --CREAET BY
+                  VAR015 VARCHAR(50) REFERENCES dbo.TBL00023(VAR001),   --UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),                          --CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE(),                          --UPDATE DATE
+            )
+
+ ----Application Management System(AMS)
+------DEVICE MANAGMENT (DMS)
+-------DEVICE SETUP
+--------DEVICE TYPE
+            CREATE TABLE dbo.TBL0061
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,            ---DEVICE_TYPE_ID
+                  VAR001 VARCHAR(50),                                         ---DEVICE_TYPE_NAME
+                  VAR002 VARCHAR(1) DEFAULT 'Y',              ---DEVICE_TYPE_STATUS --Y:Active,N:IN-Active,D:Delete
+                  VAR003 VARCHAR(255),                        ---DEVICE_TYPE_DESCRIPTION
+                  VAR004 VARCHAR(50) ,                                        ---CREAET BY
+                  VAR005 VARCHAR(50),                                         ---UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),              ---CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE(),              ---UPDATE DATE
+            )
+      INSERT INTO dbo.TBL0061(VAR001,VAR002,VAR003) VALUES('Hardwired GPS','Y','Wired to vehicle battery/ignition(Teltonika FMB920, Queclink GV300)')
+      INSERT INTO dbo.TBL0061(VAR001,VAR002,VAR003) VALUES('Battery Tracker','Y','Portable with rechargeable battery(Tracki 2023, Spytec STI GL300)')
+      INSERT INTO dbo.TBL0061(VAR001,VAR002,VAR003) VALUES('OBD-II Tracker','Y','Plugs into vehicle OBD-II port(Teltonika FMB630, CalAmp LMU-3030)')
+      INSERT INTO dbo.TBL0061(VAR001,VAR002,VAR003) VALUES('Asset Tracker','Y','For non-vehicular assets (waterproof)(ATrack AK11, Geoforce GT1)')
+      INSERT INTO dbo.TBL0061(VAR001,VAR002,VAR003) VALUES('Personal Tracker','Y','Wearable/compact for people/pets(Jiobit, Tile Pro)')
+    --SELECT * FROM dbo.TBL0061
+--------DEVICE Category
+            CREATE TABLE dbo.TBL0062
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,            --DEVICE_CATE_ID
+                  VAR001 VARCHAR(50),                                         --DEVICE_CATE_NAME                  
+                  VAR002 VARCHAR(1) DEFAULT 'Y',                        --DEVICE_CATE_STATUS --Y:Active,N:IN-Active,D:Delete
+                  VAR003 VARCHAR(255),                                  --DEVICE_CATE_DESCRIPTION
+                  VAR004 VARCHAR(50) ,                                        --CREAET BY
+                  VAR005 VARCHAR(50) ,                                        --UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),              --CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE(),              --UPDATE DATE
+            )
+      INSERT INTO dbo.TBL0062(VAR001,VAR002,VAR003) VALUES('Fleet Management','Y','Commercial vehicle tracking')
+      INSERT INTO dbo.TBL0062(VAR001,VAR002,VAR003) VALUES('Personal Safety','Y','Child/elderly/pet tracking')
+      INSERT INTO dbo.TBL0062(VAR001,VAR002,VAR003) VALUES('Asset Monitoring','Y','Cargo/machinery/equipment')
+      INSERT INTO dbo.TBL0062(VAR001,VAR002,VAR003) VALUES('Telematics','Y','Advanced vehicle diagnostics + tracking')
+      INSERT INTO dbo.TBL0062(VAR001,VAR002,VAR003) VALUES('Stealth Tracking','Y','Covert surveillance')
+    --SELECT * FROM dbo.TBL0062
+--------DEVICE VENDOR
+            CREATE TABLE dbo.TBL0063
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,--DEVICE_VENDOR_ID
+                  NUM002 INT ,                              --DEVICE_VENDOR_DEFAULT_PORT
+                  NUM003 INT ,                              --DEVICE_VENDOR_RANG_PORT_FROM
+                  NUM004 INT ,                              --DEVICE_VENDOR_RANG_PORT_TO
+                  NUM005 INT ,                              --DEVICE_PROTOCOL_IMEI_LENGTH
+                  VAR001 VARCHAR(1) DEFAULT 'L',            --DEVICE_VENDOR_TYPE L:LOCAL, E:Export M:EXPORT DETAIL LOCAL
+                  VAR002 VARCHAR(50),                             --DEVICE_VENDOR
+                  VAR003 VARCHAR(1) DEFAULT 'Y',      --DEVICE_VENDOR_STATUS --Y:Active,N:IN-Active,D:Delete
+                  VAR004 VARCHAR(255),                --DEVICE_VENDOR_DESCRIPTION
+                  VAR005 VARCHAR(50) ,                            --CREAET BY
+                  VAR006 VARCHAR(50) ,                            --UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),  --CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE(),  --UPDATE DATE
+            );
+      INSERT INTO dbo.TBL0063(NUM002,NUM003,NUM004,NUM005,VAR001,VAR002,VAR003) VALUES(5000,5000,5999,15,'L','Teltonika','Y')
+      INSERT INTO dbo.TBL0063(NUM002,NUM003,NUM004,NUM005,VAR001,VAR002,VAR003) VALUES(6000,6000,6100,14,'L','CONCOX','Y')
+      INSERT INTO dbo.TBL0063(NUM002,NUM003,NUM004,NUM005,VAR001,VAR002,VAR003) VALUES(7000,7000,7100,16,'L','CONBIN','Y')
+    --SELECT * FROM dbo.TBL0063
+--------DEVICE PROTOCOLS
+            CREATE TABLE dbo.TBL0064
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,        --DEVICE_PROTOCOL_ID
+                  NUM002 INT REFERENCES dbo.TBL0063(NUM001),      --DEVICE_VENDOR_ID
+                  NUM003 INT ,                                        --DEVICE_PROTOCOL_DEFAULT_PORT (MUST BE VENDOR DEFINE RANG)
+                  VAR001 VARCHAR(50),                                         --DEVICE_PROTOCOL_NAME
+                  VAR002 VARCHAR(50),                                         --DEVICE_PROTOCOL_CODE
+                  VAR003 VARCHAR(50),                                         --DEVICE_PROTOCOL_HEAD
+                  VAR004 VARCHAR(1)DEFAULT 'Y',               --DEVICE_PROTOCOL_STATUS --Y:Active,N:IN-Active,D:Delete
+                  VAR005 VARCHAR(255),                        --DEVICE_PROTOCOL_DESCRIPTION
+                  VAR006 VARCHAR(50) ,                                        --CREAET BY
+                  VAR007 VARCHAR(50) ,                                        --UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),              --CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE(),              --UPDATE DATE
+            )
+      INSERT INTO dbo.TBL0064(NUM002,NUM003,VAR001,VAR002,VAR003,VAR004)VALUES(1,5001,'codec8','01','#000F','Y')
+      INSERT INTO dbo.TBL0064(NUM002,NUM003,VAR001,VAR002,VAR003,VAR004)VALUES(1,5002,'codec8E','02','#00FE','Y')
+      INSERT INTO dbo.TBL0064(NUM002,NUM003,VAR001,VAR002,VAR003,VAR004)VALUES(1,5003,'codec12','03','#120F','Y')
+      INSERT INTO dbo.TBL0064(NUM002,NUM003,VAR001,VAR002,VAR003,VAR004)VALUES(1,5003,'codec12e','04','#12FE','Y')
+    --SELECT * FROM dbo.TBL0064
+--------DEVICE FIRMWARE
+            CREATE TABLE dbo.TBL0065
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,        -- DEVICE_FIRMWARE_ID
+                  NUM002 INT REFERENCES dbo.TBL0063(NUM001),   -- DEVICE_VENDOR_ID
+                  VAR001 VARCHAR(50),                          -- DEVICE_FIRMWARE_NAME
+                  VAR002 VARCHAR(50),                          -- DEVICE_FIRMWARE_CODE
+                  VAR003 VARCHAR(50),                          -- DEVICE_FIRMWARE_VERSION
+                  VAR004 VARCHAR(255),                         -- DEVICE_FIRMWARE_DOWNLOAD_LINK
+                  VAR005 VARCHAR(1),                           -- DEVICE_FIRMWARE_STABLE (Y:YES, N:NO)
+                  VAR006 VARCHAR(1) DEFAULT 'Y',               -- DEVICE_FIRMWARE_STATUS (Y:Active, N:IN-Active, D:Delete)
+                  VAR007 VARCHAR(255),                         -- DEVICE_PROTOCOL_DESCRIPTION
+                  DAT001 DATE,                                 -- RELEASE_DATE
+                  VAR008 VARCHAR(50) ,                          -- CREATE BY
+                  VAR009 VARCHAR(50) ,                          -- UPDATE BY
+                  DAT002 DATETIME DEFAULT GETDATE(),           -- CREATE DATE
+                  DAT003 DATETIME DEFAULT GETDATE()            -- UPDATE DATE
+            );
+      INSERT INTO dbo.TBL0065 (NUM002, VAR001, VAR002, VAR003, VAR004, VAR005, VAR006, VAR007, DAT001, VAR008, VAR009)
+      VALUES(1, 'FMB920 Standard', 'FMB920_STD', '01.18.11', 'https://cdn.teltonika-gps.com/firmware/FMB920_01.18.11.bin', 'Y', 'Y', 'Teltonika Codec12 protocol', '2023-05-15', 'system', 'system'),
+              (1, 'FMB920 Advanced', 'FMB920_ADV', '02.05.03', 'https://cdn.teltonika-gps.com/firmware/FMB920_02.05.03.bin', 'Y', 'Y', 'Teltonika Codec12 with extended features', '2023-08-22', 'system', 'admin'),
+              (1, 'FMB125 Basic', 'FMB125_BSC', '01.12.07', 'https://cdn.teltonika-gps.com/firmware/FMB125_01.12.07.bin', 'Y', 'Y', 'Teltonika Codec8 protocol', '2023-03-10', 'system', 'system'),
+              (1, 'FMB140 Beta', 'FMB140_BTA', '03.01.45', 'https://cdn.teltonika-gps.com/beta/FMB140_03.01.45.bin', 'N', 'Y', 'Experimental firmware (unstable)', '2023-11-05', 'dev', 'dev'),
+              (2, 'GV300MA Standard', 'GV300MA_STD', 'V1.0.3', 'https://support.queclink.com/fw/GV300MA_V1.0.3.bin', 'Y', 'Y', 'Queclink standard protocol', '2023-02-18', 'system', 'system'),
+              (2, 'GV300MA Security', 'GV300MA_SEC', 'V1.1.2', 'https://support.queclink.com/fw/GV300MA_V1.1.2.bin', 'Y', 'N', 'Security patched version', '2023-06-30', 'admin', 'admin'),
+              (1, 'FMB900 Legacy', 'FMB900_OLD', '00.99.12', 'https://archive.teltonika-gps.com/old/FMB900_00.99.12.bin', 'Y', 'N', 'Deprecated firmware version', '2020-10-05', 'legacy', 'admin'),
+              (2, 'GV200 Discontinued', 'GV200_DISC', 'V0.9.8', 'https://archive.queclink.com/old/GV200_V0.9.8.bin', 'N', 'D', 'Removed from support', '2019-05-20', 'olduser', 'admin');
+    --SELECT * FROM dbo.TBL0065
+   
+--------DEVICE IOS TYPE
+            CREATE TABLE dbo.TBL0066
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,        -- IOS_TYPE_ID
+                  VAR001 VARCHAR(50),                          -- IOS_TYPE_NAME
+                  VAR002 VARCHAR(1),                                           -- IOS_TYPE_CODE(D:Digital, A:Digital)
+                  VAR003 VARCHAR(255),                         -- IOS_TYPE_DESCRIPTION
+                  VAR004 VARCHAR(1) DEFAULT 'Y',               -- IOS_TYPE_STATUS (Y:Active, N:Inactive, D:Deleted)
+                  VAR005 VARCHAR(1) DEFAULT 'I',               -- IOS_TYPE_DIRECTION(I:INPUT, O:OUTPUT, B:BOTH)
+                  VAR006 VARCHAR(1) DEFAULT '2',               -- IOS_TYPE_LENGTH(2,4,8,16)
+                  VAR007 VARCHAR(50) ,                          -- CREATED_BY
+                  VAR008 VARCHAR(50) ,                          -- UPDATED_BY
+                  DAT001 DATETIME DEFAULT GETDATE(),           -- CREATE_DATE
+                  DAT002 DATETIME DEFAULT GETDATE()            -- UPDATE_DATE
+            );
+      INSERT INTO TBL0066(VAR001,VAR002,VAR005,VAR006)VALUES ('Digital Input','D','I','2')
+      INSERT INTO TBL0066(VAR001,VAR002,VAR005,VAR006)VALUES ('Analog Input','A','I','2')
+      INSERT INTO TBL0066(VAR001,VAR002,VAR005,VAR006)VALUES ('Digital OUT','D','O','2')
+
+--------DEVICE IOS MASTER
+            CREATE TABLE dbo.TBL0067
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,        -- IOS_MST_ID
+                  NUM002 INT REFERENCES dbo.TBL0063(NUM001),   -- DEVICE_VENDOR_ID              
+                  NUM003 INT REFERENCES dbo.TBL0066(NUM001),   -- IOS_TYPE_ID
+                  VAR001 VARCHAR(10) NOT NULL,                 -- IOS_CODE  LIKE 240
+                  VAR002 VARCHAR(50) NOT NULL,                 -- IOS_NAME  (e.g., "Ignition", "Fuel Sensor", "Door Sensor")
+                  VAR003 VARCHAR(20) NOT NULL,                 -- IO_PORT   (e.g., "DI1", "AI2", "DO3")
+                  VAR004 VARCHAR(50),                          -- IO_UNIT   (e.g., "Volts", "Percent", "On/Off")
+                  NUM004 FLOAT,                                -- MIN_VALUE
+                  NUM005 FLOAT,                                -- MAX_VALUE
+                  VAR005 VARCHAR(1),                           -- IS_LOOKUP ('Y':'YES',N:NO)
+                  VAR006 VARCHAR(100),                         -- NORMAL_STATE (e.g., "Open", "Closed", "High")
+                  VAR007 VARCHAR(255),                         -- DESCRIPTION
+                  VAR008 VARCHAR(1) DEFAULT 'Y',               -- STATUS (Y:Active, N:Inactive, D:Deleted)
+                  VAR009 VARCHAR(50) ,                          -- CREATED_BY
+                  VAR010 VARCHAR(50) ,                          -- UPDATED_BY
+                  DAT001 DATETIME DEFAULT GETDATE(),           -- CREATE_DATE
+                  DAT002 DATETIME DEFAULT GETDATE()            -- UPDATE_DATE
+            );
+            --IF LOOKUP YES THEN
+--------DEVICE IOS DETAIL
+            CREATE TABLE dbo.TBL0068
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,        -- ISO_DTL_ID
+                  NUM002 INT REFERENCES dbo.TBL0067(NUM001),   -- IOS_MST_ID
+                  VAR001 VARCHAR(50) NOT NULL,                 -- PARAMETER_CODE
+                  VAR002 VARCHAR(50) NOT NULL,                 -- PARAMETER_NAME                
+                  VAR003 VARCHAR(255),                         -- PARAMETER_DESCRIPTION
+                  VAR004 VARCHAR(1) DEFAULT 'Y',               -- STATUS              (Y:Active, N:Inactive, D:Deleted)
+                  VAR005 VARCHAR(50) ,                          -- CREATED_BY
+                  VAR006 VARCHAR(50) ,                          -- UPDATED_BY
+                  DAT001 DATETIME DEFAULT GETDATE(),           -- CREATE_DATE
+                  DAT002 DATETIME DEFAULT GETDATE()            -- UPDATE_DATE
+            );
+
+
+--------DEVICE MASTER
+            CREATE TABLE dbo.TBL0069
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,           ---Device_MST_ID
+                  NUM002 INT REFERENCES dbo.TBL0061(NUM001),      ---DEVICE_TYPE_ID
+                  NUM003 INT REFERENCES dbo.TBL0062(NUM001),      ---DEVICE_CATE_ID
+                  NUM004 INT REFERENCES dbo.TBL0041(NUM001),      ---COUNTRY_ID
+                  NUM005 INT REFERENCES dbo.TBL0063(NUM001),      ---DEVICE_VENDOR_ID
+                  NUM006 INT REFERENCES dbo.TBL0065(NUM001),      ---DEVICE_FIRMWARE_ID
+                  NUM007 INT,                                                 ---DEVICE_SIM_SLOT (1:Single,2:Dual,3:Triple,4:4 sim)
+                  DEC001 DECIMAL(10,2),                                 ---DEVICE_COST
+                  DEC002 DECIMAL(10,2),                                 ---DEVICE_PRICE
+                  VAR001 VARCHAR(50),                                         ---DEVICE_NAME
+                  VAR002 VARCHAR(4),                          ---DEVICE_PORT  (UDP,TCP,BOTH)
+                  VAR003 VARCHAR(1) DEFAULT 'Y',              ---DEVICE_STATUS(Y:Active, N:IN-Active, D:Delete)
+                  VAR004 VARCHAR(200),                        ---DEVICE_DESCRIPTION
+                  VAR005 VARCHAR(50) ,                                        ---CREAET BY
+                  VAR006 VARCHAR(50) ,                                        ---UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),              ---CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE(),              ---UPDATE DATE
+            );
+--------DEVICE PROTOCOLS DETAIL
+            CREATE TABLE dbo.TBL0070
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,           ---Device_PDTL_ID
+                  NUM002 INT REFERENCES dbo.TBL0069(NUM001),      ---Device_MST_ID
+                  NUM003 INT REFERENCES dbo.TBL0064(NUM001),      ---DEVICE_PROTOCOL_ID ---MAPPING BASE ON MASTER VENDOR
+                  VAR001 VARCHAR(200),                        ---REMARKS
+                  VAR002 VARCHAR(50) ,                                        ---CREAET BY
+                  VAR003 VARCHAR(50) ,                                        ---UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),              ---CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE(),              ---UPDATE DATE
+            )
+--------DEVICE IOS DETAIL
+            CREATE TABLE dbo.TBL0071
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,           ---Device_IDTL_ID
+                  NUM002 INT REFERENCES dbo.TBL0069(NUM001),      ---Device_MST_ID
+                  NUM003 INT REFERENCES dbo.TBL0067(NUM001),      ---IOS_MST_ID ---MAPPING BASE ON MASTER VENDOR
+                  VAR001 VARCHAR(200),                        ---REMARKS
+                  VAR002 VARCHAR(50) ,                                        ---CREAET BY
+                  VAR003 VARCHAR(50) ,                                        ---UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),              ---CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE(),              ---UPDATE DATE
+            )
+-------SIM
+---------SIM_TELECOM
+            CREATE TABLE dbo.TBL0072
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,        -- TELECOM_ID
+                  NUM002 INT REFERENCES dbo.TBL0041(NUM001),      --- COUNTRY_ID
+                  VAR001 VARCHAR(50),                          -- TELECOM_NAME (e.g. UFONE,JAZZ,TELENOR,WARID,ZONG)
+                  VAR002 VARCHAR(1) DEFAULT 'Y',               -- TELECOM_STATUS (A:Active, I:Inactive, L:Lost, D:Deleted)
+                  VAR003 VARCHAR(20),                          -- APN_NAME
+                  VAR004 VARCHAR(50),                          -- APN_USERNAME
+                  VAR005 VARCHAR(50),                          -- APN_PASSWORD
+                  VAR006 VARCHAR(50),                          -- CREATED_BY
+                  VAR007 VARCHAR(50),                          -- UPDATED_BY
+                  DAT003 DATETIME DEFAULT GETDATE(),           -- CREATE_DATE
+                  DAT004 DATETIME DEFAULT GETDATE()            -- UPDATE_DATE
+            )
+---------SIM_PACKAGE
+            CREATE TABLE dbo.TBL0073
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,        -- SIM_PACKAGE_ID
+                  NUM002 INT,                                                  -- ALLOWED_MBS      100
+                  NUM003 INT,                                                  -- ALLOWED_SMS      1000
+                  NUM004 INT,                                  -- ALLOWED_VOICE     500
+                  VAR001 VARCHAR(50),                          -- SIM_PACKAGE_NAME (e.g. POOL,30MB)
+                  VAR002 VARCHAR(1) DEFAULT 'Y',               -- SIM_PACKAGE_STATUS (A:Active, I:Inactive, D:Deleted)
+                  VAR003 VARCHAR(1) DEFAULT 'M',               -- SIM_PACKAGE_TYPE (O:ONCE, M:MONTHLY, Q:QTY,S:SIMI-ANNUALLY,Y:YEARLY)
+                  VAR004 VARCHAR(1) DEFAULT 'M',               -- SIM_BILLING_TYPE (O:ONCE, M:MONTHLY, Q:QTY,S:SIMI-ANNUALLY,Y:YEARLY)
+                  DEC001 DECIMAL(10,2),                                  -- PACKAGE_AMOUNT
+                  DEC002 DECIMAL(10,2),                                  -- PACKAGE_ADVANCE
+                  DEC003 DECIMAL(10,2),                                  -- PACKAGE_DISCOUNT
+                  VAR005 VARCHAR(50) ,                          -- CREATED_BY
+                  VAR006 VARCHAR(50) ,                          -- UPDATED_BY
+                  DAT001 DATETIME DEFAULT GETDATE(),           -- CREATE_DATE
+                  DAT002 DATETIME DEFAULT GETDATE()            -- UPDATE_DATE
+            )
+            
+---------SIM_MASTER add sim number exculde----
+            CREATE TABLE dbo.TBL0074
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,              --SIM_MST_ID
+                  NUM002 INT REFERENCES dbo.TBL0072(NUM001),         --TELECOM_ID
+                  NUM003 INT REFERENCES dbo.TBL0073(NUM001),         --SIM_PACKAGE_ID
+                  VAR001 VARCHAR(20) NOT NULL,                   --SIM_NUMBER (MSISDN)
+                  VAR002 VARCHAR(30) UNIQUE,                     --SIM_JACKET_NO (ICCID)
+                  VAR003 VARCHAR(10) NOT NULL,                   --SIM_TYPE (PREPAID/POSTPAID)
+                  VAR004 VARCHAR(10) NOT NULL,                   --SIM_CATEGORY (POOL/INDIVIDUAL)
+                  VAR005 VARCHAR(20),                            --PIN_CODE
+                  VAR006 VARCHAR(20),                            --PUK_CODE
+                  VAR007 VARCHAR(1) DEFAULT 'I',                 --STATUS (A:Active, I:Inactive, L:Lost, D:Deleted)
+                  VAR008 VARCHAR(50),                            --CREATED_BY
+                  VAR009 VARCHAR(50),                            --UPDATED_BY
+                  DAT001 DATETIME DEFAULT GETDATE(),             --CREATE_DATE
+                  DAT002 DATETIME DEFAULT GETDATE()              --UPDATE_DATE
+            );
+            
+---------HARNESS_ITEM
+             CREATE TABLE dbo.TBL0075
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,              --HARNESS_ITEM_ID
+                  VAR001 VARCHAR(50) NOT NULL,                       --HARNESS_ITEM_NAME
+                  VAR002 VARCHAR(2) NOT NULL,                              --HARNESS_ITEM_TYPE(W:WIRE, J:JEK, T:TERMINAL,P:PACKING,O:OTHERS)
+                  VAR003 VARCHAR(1) NOT NULL,                              --HARNESS_ITEM_STATUS(A:Active, I:Inactive, D:Deleted)
+                  DEC001 DECIMAL(10,0),                                    --HARNESS_PCS
+                  DEC002 DECIMAL(10,2),                                    --HARNESS_COST
+                  DEC003 DECIMAL(10,2),                                    --HARNESS_PRICE
+                  VAR004 VARCHAR(50),                            --CREATED_BY
+                  VAR005 VARCHAR(50),                            --UPDATED_BY
+                  DAT001 DATETIME DEFAULT GETDATE(),             --CREATE_DATE
+                  DAT002 DATETIME DEFAULT GETDATE()              --UPDATE_DATE
+            );
+---------HARNESS_MASTER
+             CREATE TABLE dbo.TBL0076
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,              --HARNESS_MST_ID
+                  VAR001 VARCHAR(10) NOT NULL,                       --HARNESS_MST_CODE
+                  VAR002 VARCHAR(50) NOT NULL,                       --HARNESS_MST_NAME
+                  VAR003 VARCHAR(1) NOT NULL,                              --HARNESS_ITEM_STATUS(A:Active, I:Inactive, D:Deleted)
+                  DEC001 DECIMAL(10,0),                                    --HARNESS_TOTAL_PCS   ---DISPLAY FIELD SUM OF DETAILS
+                  DEC002 DECIMAL(10,2),                                    --HARNESS_TOTAL_COST  ---DISPLAY FIELD SUM OF DETAILS
+                  DEC003 DECIMAL(10,2),                                    --HARNESS_TOTAL_PRICE ---DISPLAY FIELD SUM OF DETAILS
+                  VAR004 VARCHAR(50),                            --CREATED_BY
+                  VAR005 VARCHAR(50),                            --UPDATED_BY
+                  DAT001 DATETIME DEFAULT GETDATE(),             --CREATE_DATE
+                  DAT002 DATETIME DEFAULT GETDATE()              --UPDATE_DATE
+            );
+---------HARNESS_DETAILS
+             CREATE TABLE dbo.TBL0077
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,              --HARNESS_DTL_ID
+                  NUM002 INT REFERENCES dbo.TBL0076(NUM001),         --HARNESS_MST_ID
+                  NUM003 INT REFERENCES dbo.TBL0075(NUM001),         --HARNESS_ITEM_ID
+                  VAR001 VARCHAR(1) DEFAULT 'A',                                 --HARNESS_ITEM_STATUS(A:Active, I:Inactive, D:Deleted)
+                  VAR002 VARCHAR(50),                            --CREATED_BY
+                  VAR003 VARCHAR(50),                            --UPDATED_BY
+                  DAT001 DATETIME DEFAULT GETDATE(),             --CREATE_DATE
+                  DAT002 DATETIME DEFAULT GETDATE()              --UPDATE_DATE
+            );
+                  
+----Application Management System(B2B)
+------DEVICE
+--------DEVICE_ITEM_MASTER
+            CREATE TABLE dbo.TBL0080
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,           ---DEVICE_ITEM_MST_ID
+                  NUM002 INT REFERENCES dbo.TBL0069(NUM001),      ---Device_MST_ID
+                  NUM003 INT REFERENCES dbo.TBL0076(NUM001),      ---HARNESS_MST_ID             
+                  VAR001 VARCHAR(20),                                         ---DEVICE_Code                
+                  VAR002 VARCHAR(20),                                         ---SerialNumber                                 
+                  VAR004 VARCHAR(20),                                         ---MACAddress
+                  VAR005 VARCHAR(1) DEFAULT 'P',                        ---DEVICE STATUS, P:Purchase, S:SOLD, C:Confrigration, T:Technition, V:vehicle, F:Faulty, R:Repairing, X:scrap
+                  VAR006 VARCHAR(200),                        ---DEVICE STATUS REMARKS
+                  DAT001 DATETIME DEFAULT GETDATE(),              ---DEVICE STATUS_date
+                  VAR007 VARCHAR(50),                                         ---CREAET BY
+                  VAR008 VARCHAR(50),                                         ---UPDATE BY
+                  DAT002 DATETIME,                                      ---CREATE DATE
+                  DAT003 DATETIME                                       ---UPDATE DATE
+            )
+--------DEVICE_SIM_DETAILS
+            CREATE TABLE dbo.TBL0081
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,              --DEVICE_SIM_ID
+                  NUM003 INT REFERENCES dbo.TBL0080(NUM001),         --DEVICE_ITEM_MST_ID
+                  NUM002 INT REFERENCES dbo.TBL0074(NUM001),         --SIM_MST_ID               
+                  DAT001 DATE,                                   --ACTIVATION_DATE
+                  DAT002 DATE,                                   --EXPIRY_DATE
+                  VAR001 VARCHAR(1) DEFAULT 'Y',                 --STATUS (A:Active, I:Inactive, L:Lost, D:Deleted)
+                  VAR002 VARCHAR(255),                           --STATUS_REMARKS
+                  VAR003 VARCHAR(50) REFERENCES dbo.TBL00023(VAR001),                            --CREATED_BY
+                  VAR004 VARCHAR(50) REFERENCES dbo.TBL00023(VAR001),                            --UPDATED_BY
+                  DAT001 DATETIME DEFAULT GETDATE(),             --CREATE_DATE
+                  DAT002 DATETIME DEFAULT GETDATE()              --UPDATE_DATE
+            )
+      NOTE: CREATE A TRIGER ON dbo.TBL0080 DEVICE_ITEM_MST IF CHANGE IN STATUS THEN INSERT LOGS BELOW TABLE
+--------DEVICE_ITEM_STATUS
+            CREATE TABLE dbo.TBL0082
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,           ---DEVICE_ITEM_STATUS_ID
+                  NUM002 INT REFERENCES dbo.TBL0080(NUM001),      ---DEVICE_ITEM_MST_ID
+                  VAR001 VARCHAR(1),                                          ---DEVICE STATUS,
+                  DAT001 DATETIME,                                      ---status_date
+                  VAR002 VARCHAR(200),                        ---REMARKS
+                  VAR003 VARCHAR(50),     ---UPDATE BY
+                  DAT002 DATETIME,                                      ---UPDATE DATE
+            )
+
+
+--Application Management System(AMS)
+----TABLE INFO
+------TABLE MASTER
+CREATE TABLE dbo.TBL0051
+(
+    NUM001 INT IDENTITY(1,1) PRIMARY KEY,      -- TABLE_ID
+    VAR001 VARCHAR(50),                        -- MODULE_CODE
+    VAR002 VARCHAR(50),                        -- SCHEMA_NAME
+    VAR003 VARCHAR(50),                        -- DTABLE_NAME
+    VAR004 VARCHAR(50),                        -- TABLE_NAME
+    VAR005 VARCHAR(50) DEFAULT 'Y',            -- TABLE_STATUS ------Y:Active,N:IN-Active,D:Delete
+    VAR006 VARCHAR(50),                        -- CREATE BY
+    VAR007 VARCHAR(50),                        -- UPDATE BY
+    DAT001 DATETIME DEFAULT GETDATE(),         -- CREATE DATE
+    DAT002 DATETIME DEFAULT GETDATE()          -- UPDATE DATE
+);
+
+            INSERT INTO dbo.TBL0051(VAR001,VAR002,VAR003)VALUES('AMS','DBO','TABLE MASTER ','TBL0051')
+            INSERT INTO dbo.TBL0051(VAR001,VAR002,VAR003)VALUES('AMS','DBO','TABLE DETAILS','TBL0052')
+------TABLE DETAIL
+            CREATE TABLE dbo.TBL0052
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,            --COLUMN_NO
+                  NUM002 INT REFERENCES dbo.TBL0051(NUM001),      --TABLE_ID
+                  NUM003 INT,                                                 --COLUMN_SEQ
+                  VAR001 VARCHAR(50),                                         --DISPLAY NAME
+                  VAR002 VARCHAR(50),                                         --DATABASE NAME
+                  VAR003 VARCHAR(50) DEFAULT 'Y',                       --TABLE_STATUS ---Y:Active,N:IN-Active,D:Delete
+                  VAR004 VARCHAR(50) ,                                        --CREAET BY
+                  VAR005 VARCHAR(50) ,                                        --UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),              --CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE()               --UPDATE DATE
+            );
+----UTILITY & VARIABLE
+------GLOBAL VARIABLE
+            CREATE TABLE dbo.TBL0053
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY,             --VARIABLE_ID
+                  VAR001 VARCHAR(50) NOT NULL,                     --VARIABLE_NAME
+                  VAR002 VARCHAR(50),                                          --VARIABLE_VALUE
+                  VAR003 VARCHAR(255),                                   --VARIABLE_DESCRIPTION
+                  VAR004 VARCHAR(1) DEFAULT 'Y',                         --VARIABLE_STATUS ---Y:Active,N:IN-Active,D:Delete
+                  VAR005 VARCHAR(50) ,                                         --CREAET BY
+                  VAR006 VARCHAR(50) ,                                         --UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),               --CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE(),               --UPDATE DATE
+            );
+------UTILITY_MASTER
+            CREATE TABLE dbo.TBL0054
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,            --UTILITY_MST_ID
+                  VAR001 VARCHAR(50),                                          --UTILITY_MST_NAME
+                  VAR002 VARCHAR(255),                                   --UTILITY_MST_DESCRIPTION
+                  VAR003 VARCHAR(1) DEFAULT 'Y',                         --UTILITY_MST_STATUS ---Y:Active,N:IN-Active,D:Delete
+                  VAR004 VARCHAR(50) ,                                         --CREAET BY
+                  VAR005 VARCHAR(50) ,                                         --UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),               --CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE()                --UPDATE DATE
+            );
+------UTILITY_DETAILS
+            CREATE TABLE dbo.TBL0055
+            (
+                  NUM001 INT IDENTITY(1,1) PRIMARY KEY,            --UTILITY_DTL_ID
+                  NUM002 INT REFERENCES dbo.TAL0054(NUM001),       --UTILITY_MST_ID
+                  NUM003 INT,                                                  --UTILITY_DTL_SEQ
+                  VAR001 VARCHAR(50),                                          --UTILITY_DTL_NAME
+                  VAR002 VARCHAR(50),                                          --UTILITY_DTL_VALUE
+                  VAR003 VARCHAR(255),                                   --UTILITY_DESCRIPTION
+                  VAR004 VARCHAR(1) DEFAULT 'Y',                         --UTILITY_DTL_STATUS ---Y:Active,N:IN-Active,D:Delete
+                  VAR005 VARCHAR(50) ,                                         --CREAET BY
+                  VAR006 VARCHAR(50) ,                                         --UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),               --CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE()          --UPDATE DATE
+            );
+----BRANDING
+------BRANDING SETTINGS
+            CREATE TABLE dbo.TBL0056
+            (
+                  NUM001 INT IDENTITY(1,1)PRIMARY KEY, --BrandingID
+                  VAR001 VARCHAR(255),                       --Master_Logo_URL
+                  VAR002 VARCHAR(255),                       --LOGIN_Logo_URL
+                  VAR003 VARCHAR(255),                       --HOME_Logo_URL
+                  VAR004 VARCHAR(255),                       --Favicon_URL
+                  VAR005 VARCHAR(255),                       --REPORT_logo_URL
+                  VAR006 VARCHAR(255),                       --LoginPage_image_url
+                  VAR007 VARCHAR(60),                              --Company_Name
+                  VAR008 VARCHAR(20),                              --Primary_Color
+                  VAR009 VARCHAR(20),                              --Secondary_Color
+                  VAR010 VARCHAR(20),                              --MENUBAR_Color
+                  VAR011 VARCHAR(20),                              --highligth_Color
+                  VAR012 VARCHAR(20),                              --font_Color
+                  VAR013 VARCHAR(20),                              --mouseover_font_Color
+                  VAR014 VARCHAR(1) DEFAULT 'Y',             --BRANDING_STATUS ---Y:Active,N:IN-Active,D:Delete
+                  VAR015 VARCHAR(50) ,                             --CREAET BY
+                  VAR016 VARCHAR(50) ,                             --UPDATE BY
+                  DAT001 DATETIME DEFAULT GETDATE(),   --CREATE DATE
+                  DAT002 DATETIME DEFAULT GETDATE()    --UPDATE DATE
+            )
+
+
+## TBL0051 (Table Master)
+
+**Purpose:** Defines high-level metadata about all system tables including table names, descriptions, and configuration settings.
+****
+
+**Relationships:** Referenced by TBL0052 as the parent table for hierarchical metadata structure.
+
+## TBL0052 (Table Details)
+
+**Purpose:** Holds column-level details for each table including field names, data types, constraints, and validation rules.
+****
+
+**Relationships:** References TBL0051 via NUM002 (Table Master ID) to establish parent-child relationship.
+
+## TBL0053 (Global Variable)
+
+**Purpose:** Stores global key-value pairs used across modules for system-wide configuration and settings.
+
+## TBL0054 (Utility Master)
+
+**Purpose:** Defines utility metadata categories and classification schemes used throughout the system.
+****
+
+**Relationships:** Parent table used in conjunction with TAL0055 (Utility Details) for categorized data storage.
+
+## TBL0055 (Utility Details)
+
+**Purpose:** Holds specific values and configurations belonging to each Utility Master category.
+****
+
+**Relationships:** References TAL0054 as parent table to maintain hierarchical utility data structure.
+
+## TBL0056 (Branding Settings)
+
+**Purpose:** Contains branding and visual customization details including logos, color schemes, and styling configurations.
+****
+
+**Relationships:** Referenced by TBL0032 (Distributor Master) to apply distributor-specific branding.
+
+## TBL0061 (Device Type)
+
+**Purpose:** Lists and categorizes various types of devices supported by the AMS system including specifications and capabilities.
+
+**Relationships:** Used in device-related views and reports but maintains loose coupling with device management tables.
+
+## TBL0062 (Device Category)
+
+**Purpose:** Groups devices by functional use-case, application domain, or operational category.
+****
+
+**Relationships:** Used in device metadata classification and likely referenced by device management systems.
+
+## TBL0063 (Device Vendor)
+
+**Purpose:** Stores comprehensive device vendor information including company details, contact information, and support data.
+
+**Relationships:** Referenced by TBL0033 (Distributor Channel), TBL0064 (Device Protocols), and TBL0065 (Device Firmware).
+
+## TBL0064 (Device Protocols)
+
+**Purpose:** Defines communication protocols, data formats, and integration standards used by different device types.
+****
+
+**Relationships:** References TBL0063 (Device Vendor) to associate protocols with specific manufacturers.
+
+## TBL0065 (Device Firmware)
+
+**Purpose:** Stores firmware versions, update links, compatibility information, and deployment instructions.
+
+**Relationships:** References TBL0063 (Device Vendor) to maintain vendor-specific firmware catalogs.
+
+## TBL0066 (Device IOS Type)
+
+**Purpose:** Defines different IOS (Input/Output System) types and their operational characteristics.
+****
+
+**Relationships:** Referenced by TBL0067 (Device IOS Master) to categorize IOS configurations.
+
+## TBL0067 (Device IOS Master)
+
+**Purpose:** Stores master IOS configurations and operational parameters for device management.
+****
+
+**Relationships:** References TBL0066 for type classification; Referenced by TBL0068, TBL0070, and TBL0071 for detailed configurations.
+
+## TBL0068 (Device IOS Detail)
+
+**Purpose:** Contains detailed IOS parameters, configuration settings, and operational specifications.
+****
+
+**Relationships:** References TBL0067 (Device IOS Master) to maintain detailed configuration hierarchies.
+
+## TBL0069 (Device Master)
+
+**Purpose:** Main device registry containing core device information, status, and identification data.
+
+**Relationships:** Central table referenced by TBL0070 (Protocol Detail) and TBL0071 (IOS Detail) for device-specific configurations.
+
+## TBL0070 (Device Protocols Detail)
+
+**Purpose:** Links specific communication protocols to individual devices with configuration parameters.
+
+**Relationships:** References TBL0069 (Device Master) and TBL0067 (Device IOS Master) for device-protocol associations.
+
+## TBL0071 (Device IOS Detail)
+
+**Purpose:** Device-specific IOS configurations tailored to individual device requirements and capabilities.
+****
+
+**Relationships:** References TBL0069 (Device Master) and TBL0067 (Device IOS Master) for device-IOS mappings.
+
+## TBL0030 (Application Roles)
+
+**Purpose:** Defines system roles and permission levels including Admin, User, Manager, and custom role definitions.
+
+**Relationships:** Referenced by TBL0031 (Application Menu) and various user-role mapping tables throughout the system.
+
+## TBL0071 (Device IOS Detail)
+
+**Purpose:** Device-specific IOS configurations tailored to individual device requirements and capabilities.
+****
+
+**Relationships:** References TBL0069 (Device Master) and TBL0067 (Device IOS Master) for device-IOS mappings.
+
+## TBL0030 (Application Roles)
+
+**Purpose:** Defines system roles and permission levels including Admin, User, Manager, and custom role definitions.
+
+**Relationships:** Referenced by TBL0031 (Application Menu) and various user-role mapping tables throughout the system.
+
+## TBL0031 (Application Menu)
+
+**Purpose:** Stores menu items, navigation structure, and UI components displayed based on user roles and permissions.
+
+**Relationships:** References TBL0030 (Application Roles) for role-based access control and itself for hierarchical menu structures.
+
+## TBL0032 (Distributor Master)
+
+**Purpose:** Comprehensive distributor information including business details, contacts, and operational configurations.
+
+**Relationships:** References TBL0056 (Branding Settings) and TBL0045 (Location); Parent to TBL0033, TBL0034, and TBL0035**.**
+
+## TBL0033 (Distributor Channel)
+
+**Purpose:** Device-specific IOS configurations tailored to individual device requirements and capabilities.
+****
+
+**Relationships:** References TBL0069 (Device Master) and TBL0067 (Device IOS Master) for device-IOS mappings.
+
+## TBL0034 (Distributor Payment Term)
+
+**Purpose:** Defines pricing structures, payment terms, discount schedules, and financial arrangements.
+
+**Relationships:** References TBL0032 (Distributor Master) to maintain distributor-specific payment configurations.
+
+## TBL0035 (Sub Distributor)
+
+**Purpose:** Stores sub-distributor hierarchy and relationship information for multi-level distribution networks.
+****
+
+**Relationships:** References TBL0032 (Distributor Master) as parent and TBL0045 (Location) for geographical data.
+
+## TBL0036 (Group Master)
+
+**Purpose:** Defines system roles and permission levels including Admin, User, Manager, and custom role definitions.
+
+**Relationships:** Referenced by TBL0031 (Application Menu) and various user-role mapping tables throughout the system.
+
+## TBL0037 (Group Details)
+
+**Purpose:** Lists individual users assigned to specific groups with role and permission mappings.
+****
+
+**Relationships:** References TBL0036 (Group Master) to maintain group membership and user associations.
+
+## TBL0038 (Organization)
+
+**Purpose:** Master organization table containing high-level organizational structure and metadata.
+
+**Relationships:** Referenced by user-role mapping tables and organizational hierarchy management systems.
+
+## TBL0039 (Company)
+
+**Purpose:** Company-level metadata including business information, registration details, and operational data.
+****
+
+**Relationships:** Parent to TBL0040 (Branch) and referenced by various user-role mapping and organizational tables.
+
+## TBL0040 (Branch)
+
+**Purpose:** Represents individual branches or locations under parent companies in the organizational hierarchy.
+
+**Relationships:** References TBL0039 (Company) as parent; Referenced by user management and role assignment systems.
+
+## TBL00021 to TBL00027 (User Management)
+
+**Purpose:** User management tables covering authentication, roles, login tracking, change logs, and user lifecycle management.
+****
+
+**Relationships:** Reference core tables like TBL0030 (Application Roles) and TBL0040 (Branch) for comprehensive user management.
+
+## TBL0041 (Country)
+
+**Purpose:** Master country reference table with country codes, names, and geographical metadata.
+
+**Relationships:** Referenced by TBL0042 (State) to establish geographical hierarchy and location-based services.
+
+## TBL0042 (State)
+
+**Purpose:** State and province information organized under countries for detailed geographical referencing.
+
+**Relationships:** References TBL0041 (Country) as parent; Referenced by TBL0043 (City) for geographical hierarchy.
+
+## TBL0043 (City)
+
+**Purpose:** City-level geographical data with detailed location information and regional classifications.
+
+**Relationships:** References TBL0042 (State) as parent and is referenced by TBL0044 (District) for location hierarchy.
+
+## TBL0044 (District)
+
+**Purpose:** District and sub-regional geographical divisions for precise location management.
+
+**Relationships:** References TBL0043 (City) as parent and is referenced by TBL0045 (Location) for detailed addressing.
+
+## TBL0043 (City)
+
+**Purpose:** Comprehensive geolocation data including coordinates, addresses, and spatial information.

@@ -1,0 +1,5 @@
+This folder contains middleware components which are responsible for intercepting requests and responses.
+Middleware can inspect, modify, or reject requests on the basis of set rules.
+
+In context of our software:
+- TenantResolutionMiddleware: Can be responsible for extracting tenant info and injecting it in HttpContext.

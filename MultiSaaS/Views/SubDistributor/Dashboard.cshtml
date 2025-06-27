@@ -1,0 +1,307 @@
+@model MultiSaaS.ViewModels.SubDistributorViewModel
+
+@{
+    ViewData["Title"] = "Sub-Distributor Dashboard";
+    Layout = "_Layout";
+}
+
+<div class="dashboard-container">
+    <!-- Mobile Menu Toggle Button (visible on small screens) -->
+    <button id="mobileMenuToggle" class="mobile-menu-toggle">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar expanded">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-layer-group logo-icon"></i>
+            <span class="logo-text">MultiSaaS</span>
+            <button id="pinSidebar" class="pin-btn" title="Pin Sidebar">
+                <i class="fa-solid fa-thumbtack"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item active" data-page="dashboard">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="menu-item" data-page="profile">
+                <i class="fa-solid fa-user"></i>
+                <span>Profile</span>
+            </a>
+            <a href="#" class="menu-item" data-page="parent-distributor">
+                <i class="fa-solid fa-building"></i>
+                <span>Parent Distributor</span>
+            </a>
+            <a href="#" class="menu-item" data-page="settings">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-footer">
+            <button id="logoutBtn" title="Logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content sidebar-expanded" id="mainContent">
+        <!-- Dashboard Page -->
+        <div class="page-content active" id="dashboard-page">
+            <div class="page-header">
+                <h1>Sub-Distributor Dashboard</h1>
+                <p>Welcome to your sub-distributor dashboard overview</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="dashboard-card">
+                        <h2><i class="fa-solid fa-user"></i> Profile</h2>
+                        <div class="dashboard-card-content">
+                            <div class="profile-summary">
+                                <h3>@Model.SubDistributor?.Name</h3>
+                                <p><strong>Code:</strong> @Model.SubDistributor?.Code</p>
+                                <p><strong>Status:</strong> <span class="badge bg-success">@Model.SubDistributor?.Status</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="dashboard-card">
+                        <h2><i class="fa-solid fa-building"></i> Parent Distributor</h2>
+                        <div class="dashboard-card-content">
+                            <div class="profile-summary">
+                                <h3>@Model.ParentDistributor?.Name</h3>
+                                <p><strong>Code:</strong> @Model.ParentDistributor?.Code</p>
+                                <p><strong>Status:</strong> <span class="badge bg-success">@Model.ParentDistributor?.Status</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-8">
+                    <div class="dashboard-card">
+                        <h2><i class="fa-solid fa-chart-simple"></i> Performance Overview</h2>
+                        <div class="dashboard-card-content">
+                            <p>This is a placeholder for a chart or graph showing performance metrics.</p>
+                            <div class="placeholder-chart"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="dashboard-card">
+                        <h2><i class="fa-solid fa-bell"></i> Recent Notifications</h2>
+                        <div class="dashboard-card-content">
+                            <ul class="notification-list">
+                                <li><i class="fa-solid fa-circle-info"></i> Profile updated successfully</li>
+                                <li><i class="fa-solid fa-user-plus"></i> New assignment from parent distributor</li>
+                                <li><i class="fa-solid fa-triangle-exclamation"></i> Performance review scheduled</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Profile Page -->
+        <div class="page-content" id="profile-page">
+            <div class="page-header">
+                <h1>Sub-Distributor Profile</h1>
+                <p>View and manage your sub-distributor profile</p>
+            </div>
+            
+            <div class="dashboard-card">
+                <h2><i class="fa-solid fa-user"></i> Profile Information</h2>
+                <div class="dashboard-card-content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="profile-field">
+                                <label>Name:</label>
+                                <span>@Model.SubDistributor?.Name</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Code:</label>
+                                <span>@Model.SubDistributor?.Code</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Email:</label>
+                                <span>@Model.SubDistributor?.Email</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Phone:</label>
+                                <span>@Model.SubDistributor?.Phone</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Website:</label>
+                                <span>@Model.SubDistributor?.Website</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="profile-field">
+                                <label>Address:</label>
+                                <span>@Model.SubDistributor?.Address</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>City:</label>
+                                <span>@Model.SubDistributor?.City</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>State:</label>
+                                <span>@Model.SubDistributor?.State</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Country:</label>
+                                <span>@Model.SubDistributor?.Country</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Postal Code:</label>
+                                <span>@Model.SubDistributor?.PostalCode</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <a asp-action="Edit" asp-route-id="@Model.SubDistributor?.Id" class="btn btn-primary">Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Parent Distributor Page -->
+        <div class="page-content" id="parent-distributor-page">
+            <div class="page-header">
+                <h1>Parent Distributor</h1>
+                <p>Information about your parent distributor</p>
+            </div>
+            
+            <div class="dashboard-card">
+                <h2><i class="fa-solid fa-building"></i> Distributor Information</h2>
+                <div class="dashboard-card-content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="profile-field">
+                                <label>Name:</label>
+                                <span>@Model.ParentDistributor?.Name</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Code:</label>
+                                <span>@Model.ParentDistributor?.Code</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Email:</label>
+                                <span>@Model.ParentDistributor?.Email</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Phone:</label>
+                                <span>@Model.ParentDistributor?.Phone</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="profile-field">
+                                <label>Status:</label>
+                                <span>@Model.ParentDistributor?.Status</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Website:</label>
+                                <span>@Model.ParentDistributor?.Website</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Description:</label>
+                                <span>@Model.ParentDistributor?.Description</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings Page -->
+        <div class="page-content" id="settings-page">
+            <div class="page-header">
+                <h1>Settings</h1>
+                <p>Configure your sub-distributor settings</p>
+            </div>
+            
+            <div class="dashboard-card">
+                <h2><i class="fa-solid fa-gear"></i> General Settings</h2>
+                <div class="dashboard-card-content">
+                    <div class="alert-placeholder"></div>
+                    <form asp-action="UpdateSettings" asp-controller="SubDistributor" method="post" class="subdistributor-form ajax-form needs-validation">
+                        <input type="hidden" name="SubDistributorId" value="@Model.SubDistributor?.Id" />
+                        <input type="hidden" name="DistributorId" value="@Model.SubDistributor?.DistributorId" />
+                        <div class="mb-3">
+                            <label for="notificationEmail" class="form-label">Notification Email</label>
+                            <input type="email" class="form-control" id="notificationEmail" name="Email" value="@Model.SubDistributor?.Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="phone" name="Phone" value="@Model.SubDistributor?.Phone">
+                        </div>
+                        <div class="mb-3">
+                            <label for="website" class="form-label">Website</label>
+                            <input type="url" class="form-control" id="website" name="Website" value="@Model.SubDistributor?.Website" placeholder="https://example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="language" class="form-label">Preferred Language</label>
+                            <select class="form-select" id="language" name="Language">
+                                <option value="English" selected>English</option>
+                                <option value="Spanish">Spanish</option>
+                                <option value="French">French</option>
+                                <option value="German">German</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="timezone" class="form-label">Timezone</label>
+                            <select class="form-select" id="timezone" name="Timezone">
+                                <option value="UTC" selected>UTC</option>
+                                <option value="UTC-5">UTC-5 (Eastern Time)</option>
+                                <option value="UTC-6">UTC-6 (Central Time)</option>
+                                <option value="UTC-7">UTC-7 (Mountain Time)</option>
+                                <option value="UTC-8">UTC-8 (Pacific Time)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="emailNotifications" name="ReceiveNotifications" checked>
+                            <label class="form-check-label" for="emailNotifications">Receive Email Notifications</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Toggle mobile menu
+            $('#mobileMenuToggle').click(function() {
+                $('#sidebar').toggleClass('expanded');
+                $('#mainContent').toggleClass('sidebar-expanded');
+            });
+            
+            // Pin sidebar
+            $('#pinSidebar').click(function() {
+                $(this).toggleClass('active');
+                $('#sidebar').toggleClass('pinned');
+            });
+            
+            // Menu navigation
+            $('.menu-item').click(function(e) {
+                e.preventDefault();
+                $('.menu-item').removeClass('active');
+                $(this).addClass('active');
+                
+                const page = $(this).data('page');
+                $('.page-content').removeClass('active');
+                $(`#${page}-page`).addClass('active');
+            });
+        });
+    </script>
+}

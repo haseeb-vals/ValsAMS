@@ -1,0 +1,4 @@
+This folder is used to abstract and isolate data access logic
+
+- In this folder we define what functions/operations the data layer must support
+- The Repository folder uses these operations and then interact with the database using ADO.NET

@@ -1,0 +1,11 @@
+Holds all tenant specific logic and context providers. This is where we define how to identify, store,
+and retrieve tenant context during request lifecycle.
+
+In context of our software:
+- Resolves tenant identity
+- Store current tenant in context
+- Apply tenant-specific logic throughout the app.
+
+For example,
+- TenantContext.cs = Holds info like TenantId
+- ITenantProvider.cs = Defines and implements tenant resolution strategy

@@ -1,0 +1,901 @@
+@model MultiSaaS.ViewModels.DistributorViewModel
+
+@{
+    ViewData["Title"] = "Distributor Dashboard";
+    Layout = "_Layout";
+}
+
+<div class="dashboard-container">
+    <!-- Mobile Menu Toggle Button (visible on small screens) -->
+    <button id="mobileMenuToggle" class="mobile-menu-toggle">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar expanded">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-layer-group logo-icon"></i>
+            <span class="logo-text">MultiSaaS</span>
+            <button id="pinSidebar" class="pin-btn" title="Pin Sidebar">
+                <i class="fa-solid fa-thumbtack"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item active" data-page="dashboard">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="menu-item" data-page="profile">
+                <i class="fa-solid fa-user"></i>
+                <span>Profile</span>
+            </a>
+            <a href="#" class="menu-item" data-page="channels">
+                <i class="fa-solid fa-sitemap"></i>
+                <span>Channels</span>
+            </a>
+            <a href="#" class="menu-item" data-page="payment-terms">
+                <i class="fa-solid fa-credit-card"></i>
+                <span>Payment Terms</span>
+            </a>
+            <a href="#" class="menu-item" data-page="sub-distributors">
+                <i class="fa-solid fa-users"></i>
+                <span>Sub-Distributors</span>
+            </a>
+            <a href="#" class="menu-item" data-page="devices">
+                <i class="fa-solid fa-microchip"></i>
+                <span>Devices</span>
+            </a>
+            <a href="#" class="menu-item" data-page="billing-cycle">
+                <i class="fa-solid fa-calendar-days"></i>
+                <span>Billing Cycle</span>
+            </a>
+            <a href="#" class="menu-item" data-page="reports">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Reports</span>
+            </a>
+            <a href="#" class="menu-item" data-page="settings">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-footer">
+            <button id="logoutBtn" title="Logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content sidebar-expanded" id="mainContent">
+        <!-- Dashboard Page -->
+        <div class="page-content active" id="dashboard-page">
+            <div class="page-header">
+                <h1>Distributor Dashboard</h1>
+                <p>Welcome to your distributor dashboard overview</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="dashboard-stat-card">
+                        <div class="stat-icon">
+                            <i class="fa-solid fa-sitemap"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">@(Model.Channels?.Count ?? 0)</div>
+                            <div class="stat-label">Channels</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="dashboard-stat-card">
+                        <div class="stat-icon">
+                            <i class="fa-solid fa-credit-card"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">@(Model.PaymentTerms?.Count ?? 0)</div>
+                            <div class="stat-label">Payment Terms</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="dashboard-stat-card">
+                        <div class="stat-icon">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">@(Model.SubDistributors?.Count ?? 0)</div>
+                            <div class="stat-label">Sub-Distributors</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="dashboard-stat-card">
+                        <div class="stat-icon">
+                            <i class="fa-solid fa-microchip"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">@(Model.Devices?.Count ?? 0)</div>
+                            <div class="stat-label">Devices</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="dashboard-stat-card">
+                        <div class="stat-icon">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">@Model.AssignedDevicesCount / @Model.Distributor?.MaxDeviceAllowed</div>
+                            <div class="stat-label">Devices Allocated</div>
+                            <div class="progress mt-2">
+                                <div class="progress-bar bg-primary" role="progressbar" 
+                                     style="width: @(((double)Model.AssignedDevicesCount / (double)(Model.Distributor?.MaxDeviceAllowed ?? 1)) * 100)%" 
+                                     aria-valuenow="@Model.AssignedDevicesCount" aria-valuemin="0" aria-valuemax="@(Model.Distributor?.MaxDeviceAllowed ?? 0)">
+                                    @(Math.Round(((double)Model.AssignedDevicesCount / (double)(Model.Distributor?.MaxDeviceAllowed ?? 1)) * 100))%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="dashboard-stat-card">
+                        <div class="stat-icon">
+                            <i class="fa-solid fa-vial"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">@Model.AssignedTestingDevicesCount / @Model.Distributor?.MaxTestingDeviceAllowed</div>
+                            <div class="stat-label">Testing Devices Allocated</div>
+                            <div class="progress mt-2">
+                                <div class="progress-bar bg-info" role="progressbar" 
+                                     style="width: @(((double)Model.AssignedTestingDevicesCount / (double)(Model.Distributor?.MaxTestingDeviceAllowed ?? 1)) * 100)%" 
+                                     aria-valuenow="@Model.AssignedTestingDevicesCount" aria-valuemin="0" aria-valuemax="@(Model.Distributor?.MaxTestingDeviceAllowed ?? 0)">
+                                    @(Math.Round(((double)Model.AssignedTestingDevicesCount / (double)(Model.Distributor?.MaxTestingDeviceAllowed ?? 1)) * 100))%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="dashboard-card">
+                        <h2><i class="fa-solid fa-handshake"></i> Service Level Agreement</h2>
+                        <div class="dashboard-card-content">
+                            <div class="sla-info">
+                                <div class="sla-number">@(Model.Distributor?.SlaNumber ?? "Not Assigned")</div>
+                                <p>SLA Reference Number</p>
+                                <hr>
+                                <div class="sla-details">
+                                    <div class="sla-item">
+                                        <span class="label">Billing Cycle:</span>
+                                        <span class="value">@GetBillingCycle(Model.Distributor?.BillingFlag)</span>
+                                    </div>
+                                    <div class="sla-item">
+                                        <span class="label">Due Days:</span>
+                                        <span class="value">@(Model.Distributor?.DueDays ?? 0) days</span>
+                                    </div>
+                                    <div class="sla-item">
+                                        <span class="label">Overdue Penalty:</span>
+                                        <span class="value">@(Model.Distributor?.OverduePercentage ?? 0)%</span>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <a href="#" class="btn btn-sm btn-primary">View Full SLA</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="dashboard-card">
+                        <h2><i class="fa-solid fa-chart-simple"></i> Performance Overview</h2>
+                        <div class="dashboard-card-content">
+                            <p>This is a placeholder for a chart or graph showing performance metrics.</p>
+                            <div class="placeholder-chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-8">
+                    <!-- This section was moved down to make room for the SLA card -->
+                </div>
+                <div class="col-md-4">
+                    <div class="dashboard-card">
+                        <h2><i class="fa-solid fa-bell"></i> Recent Notifications</h2>
+                        <div class="dashboard-card-content">
+                            <ul class="notification-list">
+                                <li><i class="fa-solid fa-circle-info"></i> New payment term added</li>
+                                <li><i class="fa-solid fa-user-plus"></i> 2 new sub-distributors registered</li>
+                                <li><i class="fa-solid fa-triangle-exclamation"></i> Channel performance alert</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Profile Page -->
+        <div class="page-content" id="profile-page">
+            <div class="page-header">
+                <h1>Distributor Profile</h1>
+                <p>View and manage your distributor profile</p>
+            </div>
+            
+            <div class="dashboard-card">
+                <h2><i class="fa-solid fa-user"></i> Profile Information</h2>
+                <div class="dashboard-card-content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="profile-field">
+                                <label>Name:</label>
+                                <span>@Model.Distributor?.Name</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Code:</label>
+                                <span>@Model.Distributor?.Code</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Email:</label>
+                                <span>@Model.Distributor?.Email</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Phone:</label>
+                                <span>@Model.Distributor?.Phone</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Website:</label>
+                                <span>@Model.Distributor?.Website</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="profile-field">
+                                <label>Address:</label>
+                                <span>@Model.Distributor?.Address</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>City:</label>
+                                <span>@Model.Distributor?.City</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>State:</label>
+                                <span>@Model.Distributor?.State</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Country:</label>
+                                <span>@Model.Distributor?.Country</span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Postal Code:</label>
+                                <span>@Model.Distributor?.PostalCode</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <a asp-action="Edit" asp-route-id="@Model.Distributor?.Id" class="btn btn-primary">Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Channels Page -->
+        <div class="page-content" id="channels-page">
+            <div class="page-header">
+                <h1>Distribution Channels</h1>
+                <p>Manage your distribution channels</p>
+            </div>
+            
+            <div class="dashboard-card">
+                <h2><i class="fa-solid fa-sitemap"></i> Channel List</h2>
+                <div class="dashboard-card-content">
+                    <div class="mb-3">
+                        <a href="#" class="btn btn-success">Add New Channel</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Code</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Channels != null)
+                                {
+                                    foreach (var channel in Model.Channels)
+                                    {
+                                        <tr>
+                                            <td>@channel.Name</td>
+                                            <td>@channel.Code</td>
+                                            <td>@channel.Type</td>
+                                            <td><span class="badge bg-success">@channel.Status</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary"><i class="fa-solid fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Payment Terms Page -->
+        <div class="page-content" id="payment-terms-page">
+            <div class="page-header">
+                <h1>Payment Terms</h1>
+                <p>Manage your payment terms</p>
+            </div>
+            
+            <div class="dashboard-card">
+                <h2><i class="fa-solid fa-credit-card"></i> Payment Term List</h2>
+                <div class="dashboard-card-content">
+                    <div class="mb-3">
+                        <a href="#" class="btn btn-success">Add New Payment Term</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Code</th>
+                                    <th>Duration (Days)</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.PaymentTerms != null)
+                                {
+                                    foreach (var term in Model.PaymentTerms)
+                                    {
+                                        <tr>
+                                            <td>@term.Name</td>
+                                            <td>@term.Code</td>
+                                            <td>@term.DurationDays</td>
+                                            <td><span class="badge bg-success">@term.Status</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary"><i class="fa-solid fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sub-Distributors Page -->
+        <div class="page-content" id="sub-distributors-page">
+            <div class="page-header">
+                <h1>Sub-Distributors</h1>
+                <p>Manage your sub-distributors</p>
+            </div>
+            
+            <div class="dashboard-card">
+                <h2><i class="fa-solid fa-users"></i> Sub-Distributor List</h2>
+                <div class="dashboard-card-content">
+                    <div class="mb-3">
+                        <a asp-controller="SubDistributor" asp-action="Create" asp-route-distributorId="@Model.Distributor?.Id" class="btn btn-success">Add New Sub-Distributor</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Code</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.SubDistributors != null)
+                                {
+                                    foreach (var subDistributor in Model.SubDistributors)
+                                    {
+                                        <tr>
+                                            <td>@subDistributor.Name</td>
+                                            <td>@subDistributor.Code</td>
+                                            <td>@subDistributor.Email</td>
+                                            <td>@subDistributor.Phone</td>
+                                            <td><span class="badge bg-success">@subDistributor.Status</span></td>
+                                            <td>
+                                                <a asp-controller="SubDistributor" asp-action="Edit" asp-route-id="@subDistributor.Id" class="btn btn-sm btn-primary"><i class="fa-solid fa-edit"></i></a>
+                                                <a asp-controller="SubDistributor" asp-action="Delete" asp-route-id="@subDistributor.Id" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Devices Page -->
+        <div class="page-content" id="devices-page">
+            <div class="page-header">
+                <h1>Device Management</h1>
+                <p>Manage your devices and allocations</p>
+            </div>
+            
+            <div class="row">
+                <!-- Device Allocation Statistics -->
+                <div class="col-md-4">
+                    <div class="dashboard-card">
+                        <h2><i class="fa-solid fa-chart-pie"></i> Device Allocation</h2>
+                        <div class="dashboard-card-content">
+                            <div class="stat-item">
+                                <div class="stat-label">Total Devices Allowed</div>
+                                <div class="stat-value">@Model.Distributor?.MaxDeviceAllowed</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Devices Assigned</div>
+                                <div class="stat-value">@Model.AssignedDevicesCount</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Devices Available</div>
+                                <div class="stat-value">@(Model.Distributor?.MaxDeviceAllowed - Model.AssignedDevicesCount)</div>
+                            </div>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-primary" role="progressbar" 
+                                     style="width: @(((double)Model.AssignedDevicesCount / (double)(Model.Distributor?.MaxDeviceAllowed ?? 1)) * 100)%" 
+                                     aria-valuenow="@Model.AssignedDevicesCount" aria-valuemin="0" aria-valuemax="@(Model.Distributor?.MaxDeviceAllowed ?? 0)">
+                                    @(Math.Round(((double)Model.AssignedDevicesCount / (double)(Model.Distributor?.MaxDeviceAllowed ?? 1)) * 100))%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testing Device Allocation Statistics -->
+                <div class="col-md-4">
+                    <div class="dashboard-card">
+                        <h2><i class="fa-solid fa-vial"></i> Testing Devices</h2>
+                        <div class="dashboard-card-content">
+                            <div class="stat-item">
+                                <div class="stat-label">Testing Devices Allowed</div>
+                                <div class="stat-value">@Model.Distributor?.MaxTestingDeviceAllowed</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Testing Devices Assigned</div>
+                                <div class="stat-value">@Model.AssignedTestingDevicesCount</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Testing Devices Available</div>
+                                <div class="stat-value">@((Model.Distributor?.MaxTestingDeviceAllowed ?? 0) - Model.AssignedTestingDevicesCount)</div>
+                            </div>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-info" role="progressbar" 
+                                     style="width: @(((double)Model.AssignedTestingDevicesCount / (double)(Model.Distributor?.MaxTestingDeviceAllowed ?? 1)) * 100)%" 
+                                     aria-valuenow="@Model.AssignedTestingDevicesCount" aria-valuemin="0" aria-valuemax="@(Model.Distributor?.MaxTestingDeviceAllowed ?? 0)">
+                                    @(Math.Round(((double)Model.AssignedTestingDevicesCount / (double)(Model.Distributor?.MaxTestingDeviceAllowed ?? 1)) * 100))%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sub-Distributor Allocation Statistics -->
+                <div class="col-md-4">
+                    <div class="dashboard-card">
+                        <h2><i class="fa-solid fa-sitemap"></i> Sub-Distributor Allocation</h2>
+                        <div class="dashboard-card-content">
+                            <div class="stat-item">
+                                <div class="stat-label">Sub-Distributors Allowed</div>
+                                <div class="stat-value">@Model.Distributor?.MaxSubDistributionAllowed</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Sub-Distributors Created</div>
+                                <div class="stat-value">@(Model.SubDistributors?.Count ?? 0)</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Sub-Distributors Available</div>
+                                <div class="stat-value">@((Model.Distributor?.MaxSubDistributionAllowed ?? 0) - (Model.SubDistributors?.Count ?? 0))</div>
+                            </div>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-success" role="progressbar" 
+                                     style="width: @(((double)(Model.SubDistributors?.Count ?? 0) / (double)(Model.Distributor?.MaxSubDistributionAllowed ?? 1)) * 100)%" 
+                                     aria-valuenow="@(Model.SubDistributors?.Count ?? 0)" aria-valuemin="0" aria-valuemax="@(Model.Distributor?.MaxSubDistributionAllowed ?? 0)">
+                                    @(Math.Round(((double)(Model.SubDistributors?.Count ?? 0) / (double)(Model.Distributor?.MaxSubDistributionAllowed ?? 1)) * 100))%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Device List -->
+            <div class="dashboard-card mt-4">
+                <h2><i class="fa-solid fa-microchip"></i> Device List</h2>
+                <div class="dashboard-card-content">
+                    <div class="mb-3">
+                        <button class="btn btn-success" id="addDeviceBtn">Add New Device</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Code</th>
+                                    <th>Type</th>
+                                    <th>Model</th>
+                                    <th>IMEI</th>
+                                    <th>Sub-Distributor</th>
+                                    <th>Testing Device</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Devices != null)
+                                {
+                                    foreach (var device in Model.Devices)
+                                    {
+                                        <tr>
+                                            <td>@device.Name</td>
+                                            <td>@device.Code</td>
+                                            <td>@device.Type</td>
+                                            <td>@device.Model</td>
+                                            <td>@device.IMEI</td>
+                                            <td>
+                                                @if (device.SubDistributorId.HasValue)
+                                                {
+                                                    var subDist = Model.SubDistributors?.FirstOrDefault(sd => sd.Id == device.SubDistributorId);
+                                                    @(subDist?.Name ?? "Unknown")
+                                                }
+                                                else
+                                                {
+                                                    <span>Not Assigned</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (device.IsTestingDevice)
+                                                {
+                                                    <span class="badge bg-info">Yes</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">No</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (device.Status == "Active")
+                                                {
+                                                    <span class="badge bg-success">@device.Status</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-warning">@device.Status</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary edit-device" data-id="@device.Id"><i class="fa-solid fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-danger delete-device" data-id="@device.Id"><i class="fa-solid fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="9" class="text-center">No devices found</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings Page -->
+        <div class="page-content" id="settings-page">
+            <div class="page-header">
+                <h1>Settings</h1>
+                <p>Configure your distributor settings</p>
+            </div>
+            
+            <div class="dashboard-card">
+                <h2><i class="fa-solid fa-gear"></i> General Settings</h2>
+                <div class="dashboard-card-content">
+                    <div class="alert-placeholder"></div>
+                    <form asp-action="UpdateSettings" asp-controller="Distributor" method="post" class="distributor-form ajax-form needs-validation">
+                        <input type="hidden" name="DistributorId" value="@Model.Distributor?.Id" />
+                        <div class="mb-3">
+                            <label for="notificationEmail" class="form-label">Notification Email</label>
+                            <input type="email" class="form-control" id="notificationEmail" name="Email" value="@Model.Distributor?.Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="phone" name="Phone" value="@Model.Distributor?.Phone">
+                        </div>
+                        <div class="mb-3">
+                            <label for="website" class="form-label">Website</label>
+                            <input type="url" class="form-control" id="website" name="Website" value="@Model.Distributor?.Website" placeholder="https://example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="language" class="form-label">Preferred Language</label>
+                            <select class="form-select" id="language" name="Language">
+                                <option value="English" selected>English</option>
+                                <option value="Spanish">Spanish</option>
+                                <option value="French">French</option>
+                                <option value="German">German</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="timezone" class="form-label">Timezone</label>
+                            <select class="form-select" id="timezone" name="Timezone">
+                                <option value="UTC" selected>UTC</option>
+                                <option value="UTC-5">UTC-5 (Eastern Time)</option>
+                                <option value="UTC-6">UTC-6 (Central Time)</option>
+                                <option value="UTC-7">UTC-7 (Mountain Time)</option>
+                                <option value="UTC-8">UTC-8 (Pacific Time)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="emailNotifications" name="ReceiveNotifications" checked>
+                            <label class="form-check-label" for="emailNotifications">Receive Email Notifications</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Billing Cycle Page -->
+        <div class="page-content" id="billing-cycle-page">
+            <div class="page-header">
+                <h1>Billing Cycle</h1>
+                <p>View your billing status and payment history</p>
+            </div>
+            
+            <div class="dashboard-card">
+                <h2><i class="fa-solid fa-calendar-days"></i> Billing Information</h2>
+                <div class="dashboard-card-content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="billing-summary">
+                                <div class="billing-item">
+                                    <span class="label">Billing Cycle:</span>
+                                    <span class="value">@GetBillingCycle(Model.Distributor?.BillingFlag)</span>
+                                </div>
+                                <div class="billing-item">
+                                    <span class="label">Payment Due Days:</span>
+                                    <span class="value">@(Model.Distributor?.DueDays ?? 0) days</span>
+                                </div>
+                                <div class="billing-item">
+                                    <span class="label">Overdue Penalty:</span>
+                                    <span class="value">@(Model.Distributor?.OverduePercentage ?? 0)%</span>
+                                </div>
+                                <div class="billing-item">
+                                    <span class="label">Next Billing Date:</span>
+                                    <span class="value">@DateTime.Now.AddMonths(1).ToString("MMM dd, yyyy")</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="billing-status">
+                                <h4>Current Status</h4>
+                                <div class="status-badge">
+                                    <span class="badge bg-success">Active</span>
+                                </div>
+                                <p>Your account is in good standing</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-card mt-4">
+                <h2><i class="fa-solid fa-receipt"></i> Payment History</h2>
+                <div class="dashboard-card-content">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Invoice #</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>INV-2023-001</td>
+                                    <td>@DateTime.Now.AddMonths(-1).ToString("MMM dd, yyyy")</td>
+                                    <td>$1,250.00</td>
+                                    <td><span class="badge bg-success">Paid</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-download"></i> Download</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>INV-2023-002</td>
+                                    <td>@DateTime.Now.AddMonths(-2).ToString("MMM dd, yyyy")</td>
+                                    <td>$1,250.00</td>
+                                    <td><span class="badge bg-success">Paid</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-download"></i> Download</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Reports Page -->
+        <div class="page-content" id="reports-page">
+            <div class="page-header">
+                <h1>Reports</h1>
+                <p>View performance reports and analytics</p>
+            </div>
+            
+            <div class="dashboard-card">
+                <h2><i class="fa-solid fa-users"></i> Sub-Distributor Activity</h2>
+                <div class="dashboard-card-content">
+                    <div class="report-filters mb-3">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="reportPeriod" class="form-label">Time Period</label>
+                                <select class="form-select" id="reportPeriod">
+                                    <option value="7">Last 7 Days</option>
+                                    <option value="30" selected>Last 30 Days</option>
+                                    <option value="90">Last 90 Days</option>
+                                    <option value="365">Last Year</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="reportSubDistributor" class="form-label">Sub-Distributor</label>
+                                <select class="form-select" id="reportSubDistributor">
+                                    <option value="all" selected>All Sub-Distributors</option>
+                                    @if (Model.SubDistributors != null)
+                                    {
+                                        foreach (var subDist in Model.SubDistributors)
+                                        {
+                                            <option value="@subDist.Id">@subDist.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button class="btn btn-primary" id="generateReport">Generate Report</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="report-summary">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="report-stat-card">
+                                    <div class="stat-value">@(Model.SubDistributors?.Count ?? 0)</div>
+                                    <div class="stat-label">Active Sub-Distributors</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="report-stat-card">
+                                    <div class="stat-value">@(Model.Devices?.Count(d => d.SubDistributorId.HasValue) ?? 0)</div>
+                                    <div class="stat-label">Assigned Devices</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="report-stat-card">
+                                    <div class="stat-value">85%</div>
+                                    <div class="stat-label">Device Utilization</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="report-stat-card">
+                                    <div class="stat-value">98.5%</div>
+                                    <div class="stat-label">Uptime</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="report-chart mt-4">
+                        <h4>Device Activity Trend</h4>
+                        <div class="chart-placeholder" style="height: 300px; background-color: #f8f9fa; display: flex; align-items: center; justify-content: center;">
+                            <p class="text-muted">Chart will be displayed here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-card mt-4">
+                <h2><i class="fa-solid fa-file-export"></i> Export Reports</h2>
+                <div class="dashboard-card-content">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="export-option">
+                                <h5>Device Allocation Report</h5>
+                                <p>Details of all devices and their allocation status</p>
+                                <button class="btn btn-outline-primary"><i class="fa-solid fa-download"></i> Export CSV</button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="export-option">
+                                <h5>Sub-Distributor Performance</h5>
+                                <p>Performance metrics for all sub-distributors</p>
+                                <button class="btn btn-outline-primary"><i class="fa-solid fa-download"></i> Export CSV</button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="export-option">
+                                <h5>Billing Summary</h5>
+                                <p>Summary of billing and payment history</p>
+                                <button class="btn btn-outline-primary"><i class="fa-solid fa-download"></i> Export CSV</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Toggle mobile menu
+            $('#mobileMenuToggle').click(function() {
+                $('#sidebar').toggleClass('expanded');
+                $('#mainContent').toggleClass('sidebar-expanded');
+            });
+            
+            // Pin sidebar
+            $('#pinSidebar').click(function() {
+                $(this).toggleClass('active');
+                $('#sidebar').toggleClass('pinned');
+            });
+            
+            // Menu navigation
+            $('.menu-item').click(function(e) {
+                e.preventDefault();
+                $('.menu-item').removeClass('active');
+                $(this).addClass('active');
+                
+                const page = $(this).data('page');
+                $('.page-content').removeClass('active');
+                $(`#${page}-page`).addClass('active');
+            });
+        });
+    </script>
+}
+
+@functions {
+    public string GetBillingCycle(string? billingFlag)
+    {
+        return billingFlag switch
+        {
+            "M" => "Monthly",
+            "Q" => "Quarterly (3 Months)",
+            "S" => "Semi-Annual (6 Months)",
+            "Y" => "Annual (12 Months)",
+            _ => "Not Specified"
+        };
+    }
+}

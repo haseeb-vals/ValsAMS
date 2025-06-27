@@ -1,0 +1,193 @@
+/* Additional Responsive Styles for Dashboard */
+
+/* Avatar Circle */
+.avatar-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #3498db;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #333;
+    cursor: pointer;
+}
+
+/* Sidebar Close Button */
+.sidebar-close {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+/* Stat Cards */
+.stat-card {
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+/* Info Groups */
+.info-group {
+    margin-bottom: 15px;
+}
+
+.info-group .info-label {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.info-group .info-value {
+    font-weight: 600;
+}
+
+/* Icon Box */
+.icon-box {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+/* Security Tips */
+.security-tip {
+    padding: 15px;
+    border-radius: 8px;
+    background-color: rgba(52, 152, 219, 0.05);
+    margin-bottom: 15px;
+}
+
+/* Enhanced Responsive Styles */
+@media (max-width: 992px) {
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    .sidebar-close {
+        display: block;
+    }
+    
+    .sidebar {
+        z-index: 1050;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .sidebar.expanded {
+        width: 250px;
+    }
+    
+    .content-page {
+        padding-top: 15px;
+    }
+    
+    .avatar-circle {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+@media (max-width: 768px) {
+    .stat-card {
+        margin-bottom: 15px;
+    }
+    
+    .card-header {
+        padding: 15px;
+    }
+    
+    .card-body {
+        padding: 15px;
+    }
+    
+    .avatar-circle {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .avatar-circle i {
+        font-size: 2.5rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .card-header button {
+        margin-top: 10px;
+        align-self: flex-end;
+    }
+    
+    .d-flex.align-items-center {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .d-flex.align-items-center .ms-auto {
+        margin-top: 15px;
+        margin-left: 0 !important;
+    }
+    
+    .icon-box {
+        margin-bottom: 10px;
+        margin-right: 0 !important;
+    }
+}
+
+/* Dark Theme Support */
+body.dark-theme .avatar-circle {
+    background-color: #2980b9;
+}
+
+body.dark-theme .mobile-menu-toggle {
+    color: #e0e0e0;
+}
+
+body.dark-theme .security-tip {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+body.dark-theme .stat-icon {
+    background-color: rgba(52, 152, 219, 0.2);
+}
+
+body.dark-theme .icon-box {
+    background-color: #2980b9 !important;
+}

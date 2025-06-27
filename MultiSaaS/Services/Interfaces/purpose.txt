@@ -1,0 +1,9 @@
+This is used to handle business logic, validations, and caluclations etc
+
+- The interface defines which business functions are available for use
+- The "Services" folder applies/implements these business functions
+
+In context of our software:
+- This allows us to keep the logic out of the Controllers. Controllers should only be responsible for orchestration.
+- Make rules/functions available across multiple endpoints
+- Keeps code organized, testable, and modular

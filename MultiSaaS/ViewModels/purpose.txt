@@ -1,0 +1,3 @@
+This folder is used to represent the exact data that needs sharing. No more, no less.
+
+-In this folder we'll place classes which will be used by "View" to render displays and take user input.

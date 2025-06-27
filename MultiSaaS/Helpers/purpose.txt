@@ -1,0 +1,7 @@
+This folder contains utility classes and static methods for commonly used operations throughout the project.
+These functions don't belong to a specific domain.
+
+In context of our software, 
+- Generating brand specific themes
+- Pasing settings from DB.
+- Encrypting sensitive data.

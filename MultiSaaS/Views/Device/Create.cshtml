@@ -1,0 +1,159 @@
+@model MultiSaaS.ViewModels.DeviceViewModel
+
+@{
+    ViewData["Title"] = "Create Device";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4><i class="fa-solid fa-microchip"></i> Create New Device</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Device.DistributorId" value="@Model.Distributor.Id" />
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <div class="alert alert-info">
+                                    <strong>Distributor:</strong> @Model.Distributor.Name (@Model.Distributor.Code)
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Device.Name" class="control-label">Device Name</label>
+                                    <input asp-for="Device.Name" class="form-control" required />
+                                    <span asp-validation-for="Device.Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Device.Code" class="control-label">Device Code</label>
+                                    <input asp-for="Device.Code" class="form-control" required />
+                                    <span asp-validation-for="Device.Code" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Device.Type" class="control-label">Device Type</label>
+                                    <select asp-for="Device.Type" class="form-select" required>
+                                        <option value="">-- Select Type --</option>
+                                        @foreach (var type in Model.DeviceTypes)
+                                        {
+                                            <option value="@type">@type</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Device.Type" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Device.Model" class="control-label">Device Model</label>
+                                    <input asp-for="Device.Model" class="form-control" required />
+                                    <span asp-validation-for="Device.Model" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Device.IMEI" class="control-label">IMEI Number</label>
+                                    <input asp-for="Device.IMEI" class="form-control" required />
+                                    <span asp-validation-for="Device.IMEI" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Device.SubDistributorId" class="control-label">Assign to Sub-Distributor</label>
+                                    <select asp-for="Device.SubDistributorId" class="form-select">
+                                        <option value="">-- Not Assigned --</option>
+                                        @foreach (var subDist in Model.SubDistributors)
+                                        {
+                                            <option value="@subDist.Id">@subDist.Name</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Device.SubDistributorId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Device.Status" class="control-label">Status</label>
+                                    <select asp-for="Device.Status" class="form-select" required>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                        <option value="Maintenance">Maintenance</option>
+                                    </select>
+                                    <span asp-validation-for="Device.Status" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mt-4">
+                                    <div class="form-check">
+                                        <input asp-for="IsTestingDevice" class="form-check-input" type="checkbox" id="isTestingDevice" />
+                                        <label class="form-check-label" for="isTestingDevice">
+                                            Mark as Testing Device
+                                        </label>
+                                    </div>
+                                    <small class="text-muted">
+                                        Testing devices count towards your testing device allocation (@Model.Distributor.MaxTestingDeviceAllowed max).
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <div class="alert alert-warning">
+                                    <strong>Note:</strong> 
+                                    <ul>
+                                        <li>You have @(Model.Distributor.MaxDeviceAllowed) total devices allowed.</li>
+                                        <li>You have @(Model.Distributor.MaxTestingDeviceAllowed) testing devices allowed.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group text-end">
+                            <a asp-controller="Distributor" asp-action="Dashboard" asp-route-id="@Model.Distributor.Id" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Create Device</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+}

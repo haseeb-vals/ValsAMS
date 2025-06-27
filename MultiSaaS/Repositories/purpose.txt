@@ -1,0 +1,6 @@
+Handles raw ADO.NET logic or stored procedure calls to directly interact with the database.
+Each repo is responsible for a specific set of table/entities
+
+In context of our software:
+- TennantRepository: Inserts/queries tenant details
+- UserRepositroy: loads users per comapny/branch/tenant
